@@ -15,8 +15,8 @@ class DashbordController extends Controller
             'expense' => 800, // 支出の総額
             'transactions' => [
                 // 最近のトランザクション
-                ['id' => 1, 'description' => '食品', 'amount' => -50, 'date' => (2024-06-01)],
-                ['id' => 1, 'description' => '給料', 'amount' => 1000, 'date' => (2024-06-02)],
+                ['id' => 1, 'description' => '食品', 'amount' => 31000, 'date' => '2024/06/01'],
+                ['id' => 2, 'description' => '給料', 'amount' => 210000, 'date' => '2024/06/02'],
             ],
         ];
 
