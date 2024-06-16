@@ -1,37 +1,37 @@
 // resources/js/Pages/Transactions/Create.jsx
 
-import React, { useState } from 'react';
-import { Inertia } from '@inertiajs/inertia';
-import { TextField, Button, Grid, Paper, Typography } from '@mui/material';
-import Layout from '../../Components/Layout';
+import React, { useState } from "react";
+import { Inertia } from "@inertiajs/inertia";
+import { TextField, Button, Grid, Paper, Typography } from "@mui/material";
+import Layout from "../../Components/Layout";
 
 function Create() {
     const [values, setValues] = useState({
-        description: '',
-        amount: '',
-        date: ''
+        description: "",
+        amount: "",
+        date: "",
     });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setValues(values => ({ ...values, [name]: value }));
+        setValues((values) => ({ ...values, [name]: value }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        Inertia.post(route('transactions.store'), values);
+        Inertia.post(route("transactions.store"), values);
     };
 
     return (
         <Layout title="Add Transaction">
             <Grid container justifyContent="center">
                 <Grid item xs={12} md={6}>
-                    <Paper style={{ padding: '20px' }}>
+                    <Paper style={{ padding: "20px" }}>
                         <Typography variant="h6">Add Transaction</Typography>
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
-                                label="Description"
+                                label="内容"
                                 name="description"
                                 value={values.description}
                                 onChange={handleChange}
@@ -40,7 +40,7 @@ function Create() {
                             />
                             <TextField
                                 fullWidth
-                                label="Amount"
+                                label="金額"
                                 name="amount"
                                 type="number"
                                 value={values.amount}
@@ -50,7 +50,7 @@ function Create() {
                             />
                             <TextField
                                 fullWidth
-                                label="Date"
+                                label="日付"
                                 name="date"
                                 type="date"
                                 value={values.date}
@@ -61,8 +61,13 @@ function Create() {
                                     shrink: true,
                                 }}
                             />
-                            <Button variant="contained" color="primary" type="submit" style={{ marginTop: '20px' }}>
-                                Add Transaction
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                style={{ marginTop: "20px" }}
+                            >
+                                追加
                             </Button>
                         </form>
                     </Paper>

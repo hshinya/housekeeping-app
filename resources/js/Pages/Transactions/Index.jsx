@@ -21,9 +21,16 @@ function Index() {
     const { transactions } = usePage().props;
 
     const handleDelete = (id) => {
-        if (confirm("Are you sure you want to delete this transaction?")) {
+        if (confirm("削除してもよろしいでしょうか?")) {
             Inertia.delete(route("transactions.destroy", id));
         }
+    };
+
+    const formatCurrency = (amount) => {
+        return new Intl.NumberFormat("ja-JP", {
+            style: "currency",
+            currency: "JPY",
+        }).format(amount);
     };
 
     return (
@@ -48,9 +55,9 @@ function Index() {
                                         primary={transaction.description}
                                         secondary={`${new Date(
                                             transaction.date
-                                        ).toLocaleDateString()} - $${
+                                        ).toLocaleDateString()} - ${formatCurrency(
                                             transaction.amount
-                                        }`}
+                                        )}`}
                                     />
                                     <ListItemSecondaryAction>
                                         <IconButton
