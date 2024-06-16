@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashbordController;
 use App\Http\Controllers\DetailController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Log;
@@ -38,12 +39,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::get('/category', 'CategoryController@index');
 Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/detail', [DetailController::class, 'index']);
-// Route::get('/category', function() {
-//     Log::error('web.php');
-//     return view('index');
-// });
+Route::get('/dashboard', [DashbordController::class, 'index'])->name('dashboard');
 
 require __DIR__.'/auth.php';
