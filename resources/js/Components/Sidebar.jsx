@@ -1,5 +1,3 @@
-// resources/js/Components/Sidebar.jsx
-
 import React from 'react';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
 import InboxIcon from '@mui/icons-material/Inbox';
