@@ -1,5 +1,3 @@
-// resources/js/Pages/Dashboard.jsx
-
 import React from 'react';
 import { usePage } from '@inertiajs/react';
 import { Typography, Paper, List, ListItem, ListItemText, Grid } from '@mui/material';
