@@ -1,5 +1,3 @@
-// resources/js/Pages/Transactions/Create.jsx
-
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
 import { TextField, Button, Grid, Paper, Typography } from "@mui/material";

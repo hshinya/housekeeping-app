@@ -1,5 +1,3 @@
-// resources/js/Pages/Transactions/Edit.jsx
-
 import React, { useState } from 'react';
 import { Inertia } from '@inertiajs/inertia';
 import { usePage } from '@inertiajs/react';
