@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// カテゴリ/詳細
 Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/detail', [DetailController::class, 'index']);
 
