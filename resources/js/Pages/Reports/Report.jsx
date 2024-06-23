@@ -1,7 +1,28 @@
 import React from "react";
 import Layout from "../../Components/Layout";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, useMediaQuery, useTheme, Grid } from "@mui/material";
 import { Bar, Doughnut } from "react-chartjs-2";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ArcElement,
+} from "chart.js";
+
+// Chart.jsのコンポーネントを登録
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ArcElement
+);
 
 const Report = ({
     monthlyIncome,
@@ -9,6 +30,9 @@ const Report = ({
     incomeByCategory,
     expenseByCategory,
 }) => {
+    const theme = useTheme();
+    const isWideScreen = useMediaQuery(theme.breakpoints.up("md"));
+
     const incomeData = {
         labels: Object.keys(monthlyIncome),
         datasets: [
@@ -39,6 +63,7 @@ const Report = ({
         labels: Object.keys(incomeByCategory),
         datasets: [
             {
+                label: "カテゴリー別収入",
                 data: Object.values(incomeByCategory),
                 backgroundColor: [
                     "rgba(75, 192, 192, 0.6)",
@@ -53,6 +78,7 @@ const Report = ({
         labels: Object.keys(expenseByCategory),
         datasets: [
             {
+                label: "カテゴリー別支出",
                 data: Object.values(expenseByCategory),
                 backgroundColor: [
                     "rgba(255, 99, 132, 0.6)",
@@ -68,48 +94,40 @@ const Report = ({
             <Typography variant="h4" gutterBottom>
                 レポート
             </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        gap: 4,
-                    }}
-                >
-                    <Box sx={{ width: "50%" }}>
+            <Grid container spacing={4}>
+                <Grid item xs={12} md={6}>
+                    <Box sx={{ width: "100%" }}>
                         <Typography variant="h6" gutterBottom>
                             月別収入
                         </Typography>
                         <Bar data={incomeData} />
                     </Box>
-                    <Box sx={{ width: "50%" }}>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Box sx={{ width: "100%" }}>
                         <Typography variant="h6" gutterBottom>
                             月別支出
                         </Typography>
                         <Bar data={expenseData} />
                     </Box>
-                </Box>
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        gap: 4,
-                    }}
-                >
-                    <Box sx={{ width: "50%" }}>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Box sx={{ width: "100%" }}>
                         <Typography variant="h6" gutterBottom>
                             カテゴリー別収入
                         </Typography>
                         <Doughnut data={incomeByCategoryData} />
                     </Box>
-                    <Box sx={{ width: "50%" }}>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Box sx={{ width: "100%" }}>
                         <Typography variant="h6" gutterBottom>
                             カテゴリー別支出
                         </Typography>
                         <Doughnut data={expenseByCategoryData} />
                     </Box>
-                </Box>
-            </Box>
+                </Grid>
+            </Grid>
         </Layout>
     );
 };
