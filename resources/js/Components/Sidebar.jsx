@@ -5,20 +5,46 @@ import {
     ListItem,
     ListItemIcon,
     ListItemText,
-    useMediaQuery,
+    IconButton,
+    Box,
 } from "@mui/material";
-import InboxIcon from "@mui/icons-material/Inbox";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import { useTheme } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material/styles"; // useThemeをインポート
+
+const drawerWidth = 240; // Set drawer width
 
 const Sidebar = ({ isOpen, onClose }) => {
-    const theme = useTheme();
-    const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+    const theme = useTheme(); // useThemeを使用
 
-    const drawerWidth = 240;
-
-    const drawer = (
-        <div>
+    return (
+        <Drawer
+            variant="persistent"
+            anchor="left"
+            open={isOpen}
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                "& .MuiDrawer-paper": {
+                    width: drawerWidth,
+                    boxSizing: "border-box",
+                },
+            }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    padding: (theme) => theme.spacing(0, 1),
+                    ...theme.mixins.toolbar,
+                }}
+            >
+                <IconButton onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
+            </Box>
             <List>
                 {["Inbox", "Starred", "Send email", "Drafts"].map(
                     (text, index) => (
@@ -31,24 +57,6 @@ const Sidebar = ({ isOpen, onClose }) => {
                     )
                 )}
             </List>
-        </div>
-    );
-
-    return (
-        <Drawer
-            variant={isDesktop ? "persistent" : "temporary"}
-            open={isOpen}
-            onClose={onClose}
-            sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-                [`& .MuiDrawer-paper`]: {
-                    width: drawerWidth,
-                    boxSizing: "border-box",
-                },
-            }}
-        >
-            {drawer}
         </Drawer>
     );
 };
