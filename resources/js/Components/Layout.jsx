@@ -1,35 +1,42 @@
-// resources/js/Components/Layout.jsx
+import React from "react";
+import { Box, CssBaseline, Toolbar } from "@mui/material";
+import Header from "./Header";
+import Sidebar from "./Sidebar";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-import React, { useState } from 'react';
-import { Box, CssBaseline, useMediaQuery, useTheme, Toolbar } from '@mui/material';
-import Header from './Header';
-import Sidebar from './Sidebar';
-
-function Layout({ title, children }) {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+const Layout = ({ children }) => {
     const theme = useTheme();
-    const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+    const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+    const [isSidebarOpen, setSidebarOpen] = React.useState(isDesktop);
 
-    const handleMenuClick = () => {
-        setSidebarOpen(!sidebarOpen);
-    };
+    React.useEffect(() => {
+        setSidebarOpen(isDesktop);
+    }, [isDesktop]);
 
-    const handleSidebarClose = () => {
-        setSidebarOpen(false);
+    const toggleSidebar = () => {
+        setSidebarOpen(!isSidebarOpen);
     };
 
     return (
-        <Box display="flex">
+        <Box sx={{ display: "flex" }}>
             <CssBaseline />
-            <Header title={title} onMenuClick={handleMenuClick} isSidebarOpen={sidebarOpen} />
-            {isDesktop && <Sidebar variant="permanent" open={true} onClose={handleSidebarClose} />}
-            {!isDesktop && <Sidebar variant="temporary" open={sidebarOpen} onClose={handleSidebarClose} />}
-            <Box component="main" flexGrow={1} mt={8} ml={isDesktop ? 20 : 0} p={2}>
-                <Toolbar /> {/* ヘッダーの下に余白を作る */}
+            <Header onMenuClick={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+            <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
+            <Box
+                component="main"
+                sx={{
+                    flexGrow: 1,
+                    p: 3,
+                    ml: { xs: 0, md: isSidebarOpen ? 20 : 0 },
+                    transition: "margin-left 0.3s ease-in-out",
+                }}
+            >
+                <Toolbar />
                 {children}
             </Box>
         </Box>
     );
-}
+};
 
 export default Layout;

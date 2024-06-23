@@ -1,27 +1,38 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseIcon from '@mui/icons-material/Close';
-import { useMediaQuery, useTheme } from '@mui/material';
+import React from "react";
+import {
+    AppBar,
+    Toolbar,
+    IconButton,
+    Typography,
+    useMediaQuery,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material/styles";
 
-function Header({ title, onMenuClick, isSidebarOpen }) {
+const Header = ({ onMenuClick, isSidebarOpen }) => {
     const theme = useTheme();
-    const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+    const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
     return (
         <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
             <Toolbar>
                 {!isDesktop && (
-                    <IconButton edge="start" color="inherit" aria-label="menu" onClick={onMenuClick}>
+                    <IconButton
+                        color="inherit"
+                        edge="start"
+                        onClick={onMenuClick}
+                        sx={{ mr: 2 }}
+                    >
                         {isSidebarOpen ? <CloseIcon /> : <MenuIcon />}
                     </IconButton>
                 )}
-                <Typography variant="h6">
-                    {title}
+                <Typography variant="h6" noWrap>
+                    家計簿アプリ
                 </Typography>
             </Toolbar>
         </AppBar>
     );
-}
+};
 
 export default Header;

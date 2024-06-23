@@ -1,27 +1,56 @@
-import React from 'react';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar } from '@mui/material';
-import InboxIcon from '@mui/icons-material/Inbox';
-import MailIcon from '@mui/icons-material/Mail';
+import React from "react";
+import {
+    Drawer,
+    List,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    useMediaQuery,
+} from "@mui/material";
+import InboxIcon from "@mui/icons-material/Inbox";
+import MailIcon from "@mui/icons-material/Mail";
+import { useTheme } from "@mui/material/styles";
 
-function Sidebar({ variant, open, onClose }) {
-    const items = [
-        { text: 'Inbox', icon: <InboxIcon /> },
-        { text: 'Starred', icon: <MailIcon /> },
-    ];
+const Sidebar = ({ isOpen, onClose }) => {
+    const theme = useTheme();
+    const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
+    const drawerWidth = 240;
+
+    const drawer = (
+        <div>
+            <List>
+                {["Inbox", "Starred", "Send email", "Drafts"].map(
+                    (text, index) => (
+                        <ListItem button key={text}>
+                            <ListItemIcon>
+                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                            </ListItemIcon>
+                            <ListItemText primary={text} />
+                        </ListItem>
+                    )
+                )}
+            </List>
+        </div>
+    );
 
     return (
-        <Drawer variant={variant} anchor="left" open={open} onClose={onClose}>
-            <Toolbar /> {/* To ensure there's enough space below the header */}
-            <List>
-                {items.map((item) => (
-                    <ListItem button key={item.text} onClick={onClose}>
-                        <ListItemIcon>{item.icon}</ListItemIcon>
-                        <ListItemText primary={item.text} />
-                    </ListItem>
-                ))}
-            </List>
+        <Drawer
+            variant={isDesktop ? "persistent" : "temporary"}
+            open={isOpen}
+            onClose={onClose}
+            sx={{
+                width: drawerWidth,
+                flexShrink: 0,
+                [`& .MuiDrawer-paper`]: {
+                    width: drawerWidth,
+                    boxSizing: "border-box",
+                },
+            }}
+        >
+            {drawer}
         </Drawer>
     );
-}
+};
 
 export default Sidebar;
