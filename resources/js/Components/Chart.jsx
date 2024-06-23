@@ -1,4 +1,5 @@
 // src/Components/Chart.jsx
+// 使っていない 削除予定
 import React from "react";
 import { Bar, Doughnut } from "react-chartjs-2";
 import {

@@ -2,7 +2,7 @@ import React from "react";
 import { usePage } from "@inertiajs/react";
 import { Box, Typography, Paper } from "@mui/material";
 import Layout from "../../Components/Layout";
-
+// 使っていない 削除予定
 const Report = () => {
     const { monthlyIncome, categoryExpense, categories } = usePage().props;
 
