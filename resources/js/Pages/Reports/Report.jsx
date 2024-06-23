@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "../../Components/Layout";
 import { Typography, Box } from "@mui/material";
-import { BarChart, DoughnutChart } from "../../Components/Chart";
+import { Bar, Doughnut } from "react-chartjs-2";
 
 const Report = ({
     monthlyIncome,
@@ -80,13 +80,13 @@ const Report = ({
                         <Typography variant="h6" gutterBottom>
                             月別収入
                         </Typography>
-                        <BarChart data={incomeData} />
+                        <Bar data={incomeData} />
                     </Box>
                     <Box sx={{ width: "50%" }}>
                         <Typography variant="h6" gutterBottom>
                             月別支出
                         </Typography>
-                        <BarChart data={expenseData} />
+                        <Bar data={expenseData} />
                     </Box>
                 </Box>
                 <Box
@@ -100,13 +100,13 @@ const Report = ({
                         <Typography variant="h6" gutterBottom>
                             カテゴリー別収入
                         </Typography>
-                        <DoughnutChart data={incomeByCategoryData} />
+                        <Doughnut data={incomeByCategoryData} />
                     </Box>
                     <Box sx={{ width: "50%" }}>
                         <Typography variant="h6" gutterBottom>
                             カテゴリー別支出
                         </Typography>
-                        <DoughnutChart data={expenseByCategoryData} />
+                        <Doughnut data={expenseByCategoryData} />
                     </Box>
                 </Box>
             </Box>
