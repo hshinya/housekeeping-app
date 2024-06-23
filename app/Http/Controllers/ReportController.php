@@ -19,14 +19,10 @@ class ReportController extends Controller
         $monthlyIncome = $transactions->where('type', 'income')->groupBy(function($item) {
             return Carbon::parse($item->date)->format('Y-m');
         })->map->sum('amount');
-        // $monthlyIncome = $transactions->where('type', 'income')->groupBy(function($item) {
-        //     return \Carbon\Carbon::parse($item->date)->format('Y-m');
-        // })->map->sum('amount');
 
         // 月別支出をグループ化し計算
         $monthlyExpense = $transactions->where('type', 'expense')->groupBy(function($item) {
             return Carbon::parse($item->date)->format('Y-m');
-            // return \Carbon\Carbon::parse($item->date)->format('Y-m');
         })->map->sum('amount');
 
         // カテゴリー別収入をグループ化し計算
@@ -35,12 +31,18 @@ class ReportController extends Controller
         // カテゴリー別支出をグループ化し計算
         $expenseByCategory = $transactions->where('type', 'expense')->groupBy('category')->map->sum('amount');
 
+        // 日別支出データを計算
+        $daylyExpense = $transactions->where('type', 'expense')->groupBy(function($item) {
+            return Carbon::parse($item->date)->format('m-d');
+        })->map->sum('amount');
+
         // データをInertiaに渡してviewにレンダリング
         return Inertia::render('Reports/Report', [
             'monthlyIncome' => $monthlyIncome,
             'monthlyExpense' => $monthlyExpense,
             'incomeByCategory' => $incomeByCategory,
             'expenseByCategory' => $expenseByCategory,
+            'daylyExpense' => $daylyExpense,
         ]);
     }
 }
