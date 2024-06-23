@@ -15,24 +15,46 @@ class ReportController extends Controller
         $transactions = Transaction::all();
 
         // 月別収支データを計算
-        $monthlyIncome = $transactions->groupBy(function($item) {
+        $monthlyIncome = $transactions->where('type', 'income')->groupBy(function($item) {
             return \Carbon\Carbon::parse($item->date)->format('Y-m');
-        })->map(function($group) {
-            return $group->sum('amount');
-        });
+        })->map->sum('amount');
+        // $monthlyIncome = $transactions->groupBy(function($item) {
+        //     return \Carbon\Carbon::parse($item->date)->format('Y-m');
+        // })->map(function($group) {
+        //     return $group->sum('amount');
+        // });
 
-        // カテゴリー別終始データを計算
-        $categoryExpense = $transactions->groupBy('category_id')->map(function($group) {
-            return $group->sum('amount');
-        });
+        // 月別支出をグループ化し計算
+        $monthlyExpense = $transactions->where('type', 'expense')->groupBy(function($item) {
+            return \Carbon\Carbon::parse($item->date)->format('Y-m');
+        })->map->sum('amount');
 
-        // カテゴリー名を取得
-        $categories = Category::whereIn('id', $categoryExpense->keys())->pluck('name', 'id');
+        // カテゴリー別収入をグループ化し計算
+        $incomeByCategory = $transactions->where('type', 'income')->groupBy('category')->map->sum('amount');
 
-        return Inertia::render('Reports/Index', [
+        // カテゴリー別支出をグループ化し計算
+        $expenseByCategory = $transactions->where('type', 'expense')->groupBy('category')->map->sum('amount');
+
+        // // カテゴリー別収支データを計算
+        // $categoryExpense = $transactions->groupBy('category_id')->map(function($group) {
+        //     return $group->sum('amount');
+        // });
+
+        // // カテゴリー名を取得
+        // $categories = Category::whereIn('id', $categoryExpense->keys())->pluck('name', 'id');
+
+        // return Inertia::render('Reports/Index', [
+        //     'monthlyIncome' => $monthlyIncome,
+        //     'categoryExpense' => $categoryExpense,
+        //     'categories' => $categories,
+        // ]);
+
+        // データをInertiaに渡してviewにレンダリング
+        return Inertia::render('Reports/Report', [
             'monthlyIncome' => $monthlyIncome,
-            'categoryExpense' => $categoryExpense,
-            'categories' => $categories,
+            'monthlyExpense' => $monthlyExpense,
+            'incomeByCategory' => $incomeByCategory,
+            'expenseByCategory' => $expenseByCategory,
         ]);
     }
 }
