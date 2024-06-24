@@ -32,9 +32,26 @@ class ReportController extends Controller
         $expenseByCategory = $transactions->where('type', 'expense')->groupBy('category')->map->sum('amount');
 
         // 日別支出データを計算
-        $daylyExpense = $transactions->where('type', 'expense')->groupBy(function($item) {
-            return Carbon::parse($item->date)->format('m-d');
-        })->map->sum('amount');
+        // $daylyExpense = $transactions->where('type', 'expense')->groupBy(function($item) {
+        //     return Carbon::parse($item->date)->format('m-d');
+        // })->map->sum('amount');
+
+
+        // 日別収入
+        $dailyIncome = Transaction::selectRaw('DATE_FORMAT(date, "%Y-%m-%d") as day, SUM(amount) as total_amount')
+            ->where('type', 'income')
+            ->groupBy('day')
+            ->get();
+
+        $dailyExpense = Transaction::selectRaw('DATE_FORMAT(date, "%Y-%m-%d") as day, SUM(amount) as total_amount')
+            ->where('type', 'expense')
+            ->groupBy('day')
+            ->get();
+        // // 日別支出
+        // $dailyExpense = Transaction::selectRaw('DATE_FORMAT(date, "%Y-%m-%d") as day, SUM(amount) as total_amount')
+        //     ->where('type', 'expense')
+        //     ->groupBy('day')
+        //     ->get();
 
         // データをInertiaに渡してviewにレンダリング
         return Inertia::render('Reports/Report', [
@@ -42,7 +59,8 @@ class ReportController extends Controller
             'monthlyExpense' => $monthlyExpense,
             'incomeByCategory' => $incomeByCategory,
             'expenseByCategory' => $expenseByCategory,
-            'daylyExpense' => $daylyExpense,
+            'dayiyIncome' => $dailyIncome,
+            'dayiyExpense' => $dailyExpense,
         ]);
     }
 }
