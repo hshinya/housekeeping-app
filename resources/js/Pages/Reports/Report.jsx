@@ -1,7 +1,7 @@
 import React from "react";
 import Layout from "../../Components/Layout";
 import { Typography, Box, useMediaQuery, useTheme, Grid } from "@mui/material";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import { Bar, Doughnut } from "react-chartjs-2";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -12,6 +12,7 @@ import {
     Legend,
     ArcElement,
 } from "chart.js";
+import LineChart from "@/Components/LineChart";
 
 // Chart.jsのコンポーネントを登録
 ChartJS.register(
@@ -29,7 +30,8 @@ const Report = ({
     monthlyExpense,
     incomeByCategory,
     expenseByCategory,
-    daylyExpense,
+    dailyIncome,
+    dailyExpense,
 }) => {
     const theme = useTheme();
     const isWideScreen = useMediaQuery(theme.breakpoints.up("md"));
@@ -90,32 +92,10 @@ const Report = ({
         ],
     };
 
-    const expenseDaylyData = {
-        labels: "日別支出",
-        datasets: [
-            {
-                label: "支出",
-                data: Object.values(daylyExpense),
-                borderColor: "rgba(255, 99, 132, 1)",
-                backgroundColor: "rgba(255, 99, 132, 0.2)",
-                fill: true,
-                // borderColor: 'rgba(75, 192, 192, 1)',
-                // backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            },
-        ],
-    };
-
-    const expenseDaylyOptions = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: "top",
-            },
-            title: {
-                display: true,
-                text: "日別支出",
-            },
-        },
+    const chartData = {
+        dailyLabels: dailyIncome.map((item) => item.day),
+        dailyIncome: dailyIncome.map((item) => item.total_amount),
+        dailyExpense: dailyExpense.map((item) => item.total_amount),
     };
 
     return (
@@ -157,15 +137,13 @@ const Report = ({
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ width: "100%" }}>
-                        <Typography variant="h6" gutterBottom>
-                            日別支出
-                        </Typography>
-                        <Line
-                            data={expenseDaylyData}
-                            otions={expenseDaylyOptions}
-                        />
-                    </Box>
+                    <Typography variant="h6">日別支出</Typography>
+                    <LineChart
+                        data={{
+                            labels: chartData.dailyLabels,
+                            monthlyExpense: chartData.dailyExpense,
+                        }}
+                    />
                 </Grid>
             </Grid>
         </Layout>

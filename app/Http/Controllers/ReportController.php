@@ -59,8 +59,8 @@ class ReportController extends Controller
             'monthlyExpense' => $monthlyExpense,
             'incomeByCategory' => $incomeByCategory,
             'expenseByCategory' => $expenseByCategory,
-            'dayiyIncome' => $dailyIncome,
-            'dayiyExpense' => $dailyExpense,
+            'dailyIncome' => $dailyIncome,
+            'dailyExpense' => $dailyExpense,
         ]);
     }
 }
