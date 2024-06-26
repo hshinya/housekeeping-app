@@ -27,7 +27,7 @@ const LineChart = ({ data }) => {
             },
             title: {
                 display: true,
-                text: '月別支出',
+                text: '日別支出',
             },
         },
     };
