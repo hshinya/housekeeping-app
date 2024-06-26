@@ -92,41 +92,10 @@ const Report = ({
         ],
     };
 
-    // const expenseDaylyData = {
-    //     labels: "日別支出",
-    //     datasets: [
-    //         {
-    //             label: "支出",
-    //             data: Object.values(daylyExpense),
-    //             borderColor: "rgba(255, 99, 132, 1)",
-    //             backgroundColor: "rgba(255, 99, 132, 0.2)",
-    //             fill: true,
-    //             // borderColor: 'rgba(75, 192, 192, 1)',
-    //             // backgroundColor: 'rgba(75, 192, 192, 0.2)',
-    //         },
-    //     ],
-    // };
-
-    // const expenseDaylyOptions = {
-    //     responsive: rue,
-    //     plugins: {
-    //         legend: {
-    //             position: "top",
-    //         },
-    //         title: {
-    //             display: true,
-    //             text: "日別支出",
-    //         },
-    //     },
-    // };
-
-    console.log(dailyIncome);
-    console.log(dailyExpense);
-
     const chartData = {
         dailyLabels: dailyIncome.map((item) => item.day),
         dailyIncome: dailyIncome.map((item) => item.total_amount),
-        dailyExpense: daylyExpense.map((item) => item.total_amount),
+        dailyExpense: dailyExpense.map((item) => item.total_amount),
     };
 
     return (
@@ -166,26 +135,6 @@ const Report = ({
                         </Typography>
                         <Doughnut data={expenseByCategoryData} />
                     </Box>
-                </Grid>
-                {/* <Grid item xs={12} md={6}>
-                    <Box sx={{ width: "100%" }}>
-                        <Typography variant="h6" gutterBottom>
-                            日別支出
-                        </Typography>
-                        <Line
-                            data={expenseDaylyData}
-                            otions={expenseDaylyOptions}
-                        />
-                    </Box>
-                </Grid> */}
-                <Grid item xs={12} md={6}>
-                    <Typography variant="h6">日別支出</Typography>
-                    <LineChart
-                        data={{
-                            labels: chartData.dailyLabels,
-                            monthlyExpense: chartData.dailyExpense,
-                        }}
-                    />
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <Typography variant="h6">日別支出</Typography>
