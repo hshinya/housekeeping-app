@@ -1,7 +1,9 @@
 import React from "react";
 import Layout from "../../Components/Layout";
+import LineChart from "@/Components/LineChart";
 import { Typography, Box, useMediaQuery, useTheme, Grid } from "@mui/material";
 import { Bar, Doughnut } from "react-chartjs-2";
+import axios from "axios";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -11,8 +13,9 @@ import {
     Tooltip,
     Legend,
     ArcElement,
+    PointElement,
+    LineElement,
 } from "chart.js";
-import LineChart from "@/Components/LineChart";
 
 // Chart.jsのコンポーネントを登録
 ChartJS.register(
@@ -22,7 +25,9 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    ArcElement
+    ArcElement,
+    PointElement,
+    LineElement
 );
 
 const Report = ({
