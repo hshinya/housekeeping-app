@@ -32,6 +32,18 @@ class ReportController extends Controller
 
     private function getReportData($startDate = null, $endDate = null)
     {
-        
+        $query = Transaction::query();
+
+        if($startDate && $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        // 月別収入
+        $monthlyIncome = $query->selectRaw('DATE_FORMAT(date, "%Y-%m") as mnth, SUM(amount) as total_amount')
+            ->where('type', 'income')
+            ->groupBy('month')
+            ->get()
+            ->pluck('total_amount', 'month')
+            ->toArray();
     }
 }
