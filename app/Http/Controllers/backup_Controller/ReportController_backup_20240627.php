@@ -45,5 +45,13 @@ class ReportController extends Controller
             ->get()
             ->pluck('total_amount', 'month')
             ->toArray();
+
+        // 月別支出
+        $monthlyExpense = $query->selectRaw('DATE_FORMAT(date, "$Y-%m") as month, SUM(amount) as total_amount')
+            ->where('type', 'expense')
+            ->groupBy('month')
+            ->get()
+            ->pluck('total_amount', 'month')
+            ->toArray();
     }
 }
