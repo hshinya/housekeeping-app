@@ -70,7 +70,6 @@ class ReportController extends Controller
             $query->groupBy(DB::raw('DATE_FORMAT(date, "%Y-%m")'))->orderBy(DB::raw('DATE_FORMAT(date, "%Y-%m")'));
         } else if($type === 'daily') {
             $query->groupBy(DB::raw('DATE_FORMAT(date, "%Y-%m-%d")'))->orderBy(DB::raw('DATE_FORMAT(date, "%Y-%m-%d")'));
-            // $query->groupBy('period')->orderBy('period');
         } else if($type === 'category') {
             $query->groupBy('category');
         }
@@ -78,7 +77,6 @@ class ReportController extends Controller
         Log::error("getData");
         Log::error($query->toSql());
         Log::error($query->pluck('total_amount'));
-        // Log::error($query->pluck('total_amount', 'period'));
         // return $type === 'category' ? $query->pluck('total_amount', 'period') : $query->get();
         return $type === 'category' ? $query->pluck('total_amount') : $query->get();
     }
