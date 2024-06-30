@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ReportController extends Controller
@@ -13,14 +14,17 @@ class ReportController extends Controller
     {
         // 初期データの取得
         $initialData = $this->getReportData();
+        Log::error($initialData);
 
-        return Inertia::render('Reports/Report', $initialData);
+        return inertia('Reports/Report', [
+            'initialData' => $initialData
+        ]);
     }
 
     public function search(Request $request)
     {
-        $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
-        $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+        $startDate = Carbon::parse($request->startDate)->startOfDay();
+        $endDate = Carbon::parse($request->endDate)->endOfDay();
 
         return Inertia::render('Reports/Report', $this->getReportData($startDate, $endDate));
     }
@@ -35,34 +39,6 @@ class ReportController extends Controller
             'dailyIncome' => $this->getData('daily', 'income', $startDate, $endDate),
             'dailyExpense' => $this->getData('daily', 'expense', $startDate, $endDate),
         ];
-        // if($startDate && $endDate) {
-        //     $monthlyIncomeQuery = DB::table('transactions')
-        //         ->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as month'), DB::raw('SUM(amount) as total_amount'))
-        //         ->where('type', 'income')
-        //         ->whereBetween('date', [$startDate, $endDate])
-        //         ->groupBy(DB::raw('DDATE_FORMAT(date, "%Y-%m")'))
-        //         ->orderBy(DB::raw('DDATE_FORMAT(date, "%Y-%m")'));
-
-        //     $monthlyExpenseQuery = DB::table('transactions')
-        //         ->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as month'), DB::raw('SUM(amount) as total_amount'))
-        //         ->where('type', 'expense')
-        //         ->whereBetween('date', [$startDate, $endDate])
-        //         ->groupBy(DB::raw('DDATE_FORMAT(date, "%Y-%m")'))
-        //         ->orderBy(DB::raw('DDATE_FORMAT(date, "%Y-%m")'));
-
-        //     $incomeByCategoryQuery = DB::table('transactions')
-        //         ->select('category', DB::raw('SUM(amount) as total_amount'))
-        //         ->where('type', 'income')
-        //         ->whereBetween('date', [$startDate, $endDate])
-        //         ->groupBy('category');
-
-        //     $expenseByCategoryQuery = DB::table('transactions')
-        //         ->select('category', DB::raw('SUM(amount) as total_amount'))
-        //         ->where('type', 'expense')
-        //         ->whereBetween('date', [$startDate, $endDate])
-        //         ->groupBy('category');
-
-        // }
     }
 
     private function getData($type, $transactionType, $startDate = null, $endDate = null)
@@ -71,13 +47,16 @@ class ReportController extends Controller
 
         switch($type) {
             case 'monthly':
-                $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as period'), DB::raw('SUM(amount) as total_amount'));
+                $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as month'), DB::raw('SUM(amount) as total_amount'));
+                // $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as period'), DB::raw('SUM(amount) as total_amount'));
                 break;
             case 'category':
-                $query->select('category as period', DB::raw('SUM(amount) as total_amount'));
+                $query->select('category', DB::raw('SUM(amount) as total_amount'));
+                // $query->select('category as period', DB::raw('SUM(amount) as total_amount'));
                 break;
             case 'daily':
-                $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m-%d") as period'), DB::raw('SUM(amount) as total_amount'));
+                $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m-%d") as day'), DB::raw('SUM(amount) as total_amount'));
+                // $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m-%d") as period'), DB::raw('SUM(amount) as total_amount'));
                 break;
         }
 
@@ -87,12 +66,20 @@ class ReportController extends Controller
             $query->whereBetween('date', [$startDate, $endDate]);
         }
 
-        if($type !== 'category') {
-            $query->groupBy('period')->orderBy('period');
-        } else {
+        if($type === 'monthly') {
+            $query->groupBy(DB::raw('DATE_FORMAT(date, "%Y-%m")'))->orderBy(DB::raw('DATE_FORMAT(date, "%Y-%m")'));
+        } else if($type === 'daily') {
+            $query->groupBy(DB::raw('DATE_FORMAT(date, "%Y-%m-%d")'))->orderBy(DB::raw('DATE_FORMAT(date, "%Y-%m-%d")'));
+            // $query->groupBy('period')->orderBy('period');
+        } else if($type === 'category') {
             $query->groupBy('category');
         }
 
-        return $type === 'category' ? $query->pluck('total_amount', 'period') : $query->get();
+        Log::error("getData");
+        Log::error($query->toSql());
+        Log::error($query->pluck('total_amount'));
+        // Log::error($query->pluck('total_amount', 'period'));
+        // return $type === 'category' ? $query->pluck('total_amount', 'period') : $query->get();
+        return $type === 'category' ? $query->pluck('total_amount') : $query->get();
     }
 }
