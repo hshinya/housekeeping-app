@@ -9,7 +9,8 @@ import {
     TextField,
     Button,
 } from "@mui/material";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut, Line } from "react-chartjs-2";
+import axios from "axios";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -19,9 +20,9 @@ import {
     Tooltip,
     Legend,
     ArcElement,
+    PointElement,
+    LineElement,
 } from "chart.js";
-import LineChart from "../../Components/LineChart";
-import axios from "axios";
 
 // Chart.jsのコンポーネントを登録
 ChartJS.register(
@@ -31,38 +32,28 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    ArcElement
+    ArcElement,
+    PointElement,
+    LineElement
 );
 
 const Report = ({ initialData }) => {
-    const theme = useTheme();
-    const isWideScreen = useMediaQuery(theme.breakpoints.up("md"));
     const [data, setData] = useState(initialData);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
-    const fetchData = async () => {
-        try {
-            // const response = await axios.post("/reports/search", {
-            //     params: {
-            //         startDate,
-            //         endDate,
-            //     },
-            // });
-            const response = await axios.post("/reports/search", {
-                startDate,
-                endDate,
-            });
-            console.log(startDate);
-            console.log(endDate);
-            console.log(response);
-            setData(response.data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+    const theme = useTheme();
+    const isWideScreen = useMediaQuery(theme.breakpoints.up("md"));
+
+    const handleSearch = async () => {
+        const response = await axios.post("/reports/search", {
+            startDate,
+            endDate,
+        });
+
+        setData(response.data);
     };
 
-    // console.log(data.monthlyIncome);
     const incomeData = {
         labels: Object.keys(data.monthlyIncome),
         datasets: [
@@ -119,10 +110,30 @@ const Report = ({ initialData }) => {
         ],
     };
 
-    const chartData = {
-        dailyLabels: data.dailyIncome.map((item) => item.day),
-        dailyIncome: data.dailyIncome.map((item) => item.total_amount),
-        dailyExpense: data.dailyExpense.map((item) => item.total_amount),
+    const dailyIncomeData = {
+        labels: data.dailyIncome.map((item) => item.day),
+        datasets: [
+            {
+                label: "日別収入",
+                data: data.dailyIncome.map((item) => item.total_amount),
+                fill: false,
+                backgroundColor: "rgba(75, 192, 192, 0.6)",
+                borderColor: "rgba(75, 192, 192, 1)",
+            },
+        ],
+    };
+
+    const dailyExpenseData = {
+        labels: data.dailyExpense.map((item) => item.day),
+        datasets: [
+            {
+                label: "日別支出",
+                data: data.dailyExpense.map((item) => item.total_amount),
+                fill: false,
+                backgroundColor: "rgba(255, 99, 132, 0.6)",
+                borderColor: "rgba(255, 99, 132, 1)",
+            },
+        ],
     };
 
     return (
@@ -130,44 +141,35 @@ const Report = ({ initialData }) => {
             <Typography variant="h4" gutterBottom>
                 レポート
             </Typography>
-            <Box sx={{ mb: 4 }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="開始日"
-                            type="date"
-                            fullWidth
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                        <TextField
-                            label="終了日"
-                            type="date"
-                            fullWidth
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={4}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={fetchData}
-                            fullWidth
-                        >
-                            検索
-                        </Button>
-                    </Grid>
+            <Grid container spacing={4} mb={2}>
+                <Grid item xs={12}>
+                    <TextField
+                        label="開始日"
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    <TextField
+                        label="終了日"
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSearch}
+                    >
+                        検索
+                    </Button>
                 </Grid>
-            </Box>
+            </Grid>
             <Grid container spacing={4}>
                 <Grid item xs={12} md={6}>
                     <Box sx={{ width: "100%" }}>
@@ -188,6 +190,22 @@ const Report = ({ initialData }) => {
                 <Grid item xs={12} md={6}>
                     <Box sx={{ width: "100%" }}>
                         <Typography variant="h6" gutterBottom>
+                            日別収入
+                        </Typography>
+                        <Line data={dailyIncomeData} />
+                    </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Box sx={{ width: "100%" }}>
+                        <Typography variant="h6" gutterBottom>
+                            日別支出
+                        </Typography>
+                        <Line data={dailyExpenseData} />
+                    </Box>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <Box sx={{ width: "100%" }}>
+                        <Typography variant="h6" gutterBottom>
                             カテゴリー別収入
                         </Typography>
                         <Doughnut data={incomeByCategoryData} />
@@ -200,30 +218,6 @@ const Report = ({ initialData }) => {
                         </Typography>
                         <Doughnut data={expenseByCategoryData} />
                     </Box>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Typography variant="h6">日別支出</Typography>
-                    <LineChart
-                        data={{
-                            labels: chartData.dailyLabels,
-                            datasets: [
-                                {
-                                    label: "日別収入",
-                                    data: chartData.dailyIncome,
-                                    borderColor: "rgba(75, 192, 192, 1)",
-                                    backgroundColor: "rgba(75, 192, 192, 0.2)",
-                                    fill: true,
-                                },
-                                {
-                                    label: "日別支出",
-                                    data: chartData.dailyExpense,
-                                    borderColor: "rgba(255, 99, 132, 1)",
-                                    backgroundColor: "rgba(255, 99, 132, 0.2)",
-                                    fill: true,
-                                },
-                            ],
-                        }}
-                    />
                 </Grid>
             </Grid>
         </Layout>
