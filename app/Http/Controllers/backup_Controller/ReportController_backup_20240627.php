@@ -12,46 +12,55 @@ class ReportController extends Controller
 {
     public function index()
     {
-        // 初期データの取得
-        $initialData = $this->getReportData();
+        // 全てのトランザクションを取得
+        $transactions = Transaction::all();
 
-        return inertia('Reports/Report', [
-            'initialData' => $initialData
-        ]);
-    }
+        // 月別収支データを計算
+        $monthlyIncome = $transactions->where('type', 'income')->groupBy(function($item) {
+            return Carbon::parse($item->date)->format('Y-m');
+        })->map->sum('amount');
 
-    public function search(Request $request)
-    {
-        $startDate = Carbon::parse($request->setData)->startOfDay();
-        $endDate = carbon::parse($request->endDate)->endOfDay();
+        // 月別支出をグループ化し計算
+        $monthlyExpense = $transactions->where('type', 'expense')->groupBy(function($item) {
+            return Carbon::parse($item->date)->format('Y-m');
+        })->map->sum('amount');
 
-        $data = $this->getReportData($$startDate, $endDate);
+        // カテゴリー別収入をグループ化し計算
+        $incomeByCategory = $transactions->where('type', 'income')->groupBy('category')->map->sum('amount');
 
-        return response()->json($data);
-    }
+        // カテゴリー別支出をグループ化し計算
+        $expenseByCategory = $transactions->where('type', 'expense')->groupBy('category')->map->sum('amount');
 
-    private function getReportData($startDate = null, $endDate = null)
-    {
-        $query = Transaction::query();
+        // 日別支出データを計算
+        // $daylyExpense = $transactions->where('type', 'expense')->groupBy(function($item) {
+        //     return Carbon::parse($item->date)->format('m-d');
+        // })->map->sum('amount');
 
-        if($startDate && $endDate) {
-            $query->whereBetween('date', [$startDate, $endDate]);
-        }
 
-        // 月別収入
-        $monthlyIncome = $query->selectRaw('DATE_FORMAT(date, "%Y-%m") as mnth, SUM(amount) as total_amount')
+        // 日別収入
+        $dailyIncome = Transaction::selectRaw('DATE_FORMAT(date, "%Y-%m-%d") as day, SUM(amount) as total_amount')
             ->where('type', 'income')
-            ->groupBy('month')
-            ->get()
-            ->pluck('total_amount', 'month')
-            ->toArray();
+            ->groupBy('day')
+            ->get();
 
-        // 月別支出
-        $monthlyExpense = $query->selectRaw('DATE_FORMAT(date, "$Y-%m") as month, SUM(amount) as total_amount')
+        $dailyExpense = Transaction::selectRaw('DATE_FORMAT(date, "%Y-%m-%d") as day, SUM(amount) as total_amount')
             ->where('type', 'expense')
-            ->groupBy('month')
-            ->get()
-            ->pluck('total_amount', 'month')
-            ->toArray();
+            ->groupBy('day')
+            ->get();
+        // // 日別支出
+        // $dailyExpense = Transaction::selectRaw('DATE_FORMAT(date, "%Y-%m-%d") as day, SUM(amount) as total_amount')
+        //     ->where('type', 'expense')
+        //     ->groupBy('day')
+        //     ->get();
+
+        // データをInertiaに渡してviewにレンダリング
+        return Inertia::render('Reports/Report', [
+            'monthlyIncome' => $monthlyIncome,
+            'monthlyExpense' => $monthlyExpense,
+            'incomeByCategory' => $incomeByCategory,
+            'expenseByCategory' => $expenseByCategory,
+            'dailyIncome' => $dailyIncome,
+            'dailyExpense' => $dailyExpense,
+        ]);
     }
 }
