@@ -62,7 +62,6 @@ const Report = ({ initialData }) => {
         }
     };
 
-    // console.log(data.monthlyIncome);
     const incomeData = {
         labels: Object.keys(data.monthlyIncome),
         datasets: [
