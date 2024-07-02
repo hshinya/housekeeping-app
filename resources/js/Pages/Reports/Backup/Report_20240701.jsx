@@ -19,12 +19,11 @@ import {
     Tooltip,
     Legend,
     ArcElement,
-    PointElement,
-    LineElement,
 } from "chart.js";
-import { useForm } from "@inertiajs/inertia-react";
 import LineChart from "../../Components/LineChart";
+import { useForm } from "@inertiajs/inertia-react";
 
+// Chart.jsのコンポーネントを登録
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -32,21 +31,29 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
-    ArcElement,
-    PointElement,
-    LineElement
+    ArcElement
 );
 
-const Report = ({
-    monthlyIncome,
-    monthlyExpense,
-    incomeByCategory,
-    expenseByCategory,
-    dailyIncome,
-    dailyExpense,
-}) => {
+const Report = ({ initialData }) => {
+    const {
+        monthlyIncome,
+        monthlyExpense,
+        incomeByCategory,
+        expenseByCategory,
+        dailyIncome,
+        dailyExpense,
+    } = initialData;
     const theme = useTheme();
     const isWideScreen = useMediaQuery(theme.breakpoints.up("md"));
+    const { data, setData, get } = useForm({
+        startDate: "",
+        endDate: "",
+    });
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        get(route("report.search"));
+    };
 
     const incomeData = {
         labels: Object.keys(monthlyIncome),
@@ -105,22 +112,9 @@ const Report = ({
     };
 
     const chartData = {
-        dailyLabels: dailyIncome.map((item) => item.day),
-        dailyIncome: dailyIncome.map((item) => item.total_amount),
-        dailyExpense: dailyExpense.map((item) => item.total_amount),
-    };
-
-    const { data, setData, get } = useForm({
-        startDate: "",
-        endDate: "",
-    });
-
-    const handleSearch = (e) => {
-        e.preventDefault();
-        get(route("reports.search"), {
-            preserveState: true,
-            preserveScroll: true,
-        });
+        dailyLabels: Object.keys(dailyIncome),
+        dailyIncome: Object.values(dailyIncome),
+        dailyExpense: Object.values(dailyExpense),
     };
 
     return (
@@ -128,46 +122,33 @@ const Report = ({
             <Typography variant="h4" gutterBottom>
                 レポート
             </Typography>
-            <Box component="form" onSubmit={handleSearch} sx={{ mb: 4 }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={4}>
-                        <TextField
-                            label="開始日"
-                            type="date"
-                            value={data.startDate}
-                            onChange={(e) =>
-                                setData("startDate", e.target.value)
-                            }
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <TextField
-                            label="終了日"
-                            type="date"
-                            value={data.endDate}
-                            onChange={(e) => setData("endDate", e.target.value)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            fullWidth
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                        >
-                            検索
-                        </Button>
-                    </Grid>
-                </Grid>
+
+            <Box component="form" onSubmit={handleSearch} mb={4}>
+                <TextField
+                    label="開始日"
+                    type="date"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={data.startDate}
+                    onChange={(e) => setData("startDate", e.target.value)}
+                    style={{ marginRight: "1rem" }}
+                />
+                <TextField
+                    label="終了日"
+                    type="date"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={data.endDate}
+                    onChange={(e) => setData("endDate", e.target.value)}
+                    style={{ marginRight: "1rem" }}
+                />
+                <Button type="submit" variant="contained" color="primary">
+                    検索
+                </Button>
             </Box>
+
             <Grid container spacing={4}>
                 <Grid item xs={12} md={6}>
                     <Box sx={{ width: "100%" }}>
@@ -202,7 +183,7 @@ const Report = ({
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Typography variant="h6">日別収入</Typography>
+                    <Typography variant="h6">日別支出</Typography>
                     <LineChart
                         data={{
                             labels: chartData.dailyLabels,
@@ -210,26 +191,18 @@ const Report = ({
                                 {
                                     label: "日別収入",
                                     data: chartData.dailyIncome,
+                                    backgroundColor: "rgba(75, 192, 192, 0.6)",
                                     borderColor: "rgba(75, 192, 192, 1)",
-                                    backgroundColor: "rgba(75, 192, 192, 0.2)",
-                                    fill: true,
+                                    borderWidth: 1,
+                                    fill: false,
                                 },
-                            ],
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Typography variant="h6">日別支出</Typography>
-                    <LineChart
-                        data={{
-                            labels: chartData.dailyLabels,
-                            datasets: [
                                 {
                                     label: "日別支出",
                                     data: chartData.dailyExpense,
+                                    backgroundColor: "rgba(255, 99, 132, 0.6)",
                                     borderColor: "rgba(255, 99, 132, 1)",
-                                    backgroundColor: "rgba(255, 99, 132, 0.2)",
-                                    fill: true,
+                                    borderWidth: 1,
+                                    fill: false,
                                 },
                             ],
                         }}

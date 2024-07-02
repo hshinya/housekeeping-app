@@ -14,11 +14,20 @@ class ReportController extends Controller
     {
         // 初期データの取得
         $initialData = $this->getReportData();
+        Log::error("ReportController index()");
         Log::error($initialData);
 
         return inertia('Reports/Report', [
             'initialData' => $initialData
         ]);
+        // return inertia('Reports/Report', [
+        //     'monthlyIncome' => $this->getData('monthly', 'income'),
+        //     'monthlyExpense' => $this->getData('monthly', 'expense'),
+        //     'incomeByCategory' => $this->getData('category', 'income'),
+        //     'expenseByCategory' => $this->getData('category', 'expense'),
+        //     'dailyIncome' => $this->getData('daily', 'income'),
+        //     'dailyExpense' => $this->getData('daily', 'expense'),
+        // ]);
     }
 
     public function search(Request $request)
@@ -26,7 +35,13 @@ class ReportController extends Controller
         $startDate = Carbon::parse($request->startDate)->startOfDay();
         $endDate = Carbon::parse($request->endDate)->endOfDay();
 
-        return Inertia::render('Reports/Report', $this->getReportData($startDate, $endDate));
+        $reportData = $this->getReportData($startDate, $endDate);
+        Log::error("reportData");
+        Log::error($reportData);
+        return Inertia::render('Reports/Report', [
+            'initialData' => $reportData
+        ]);
+        // return Inertia::render('Reports/Report', $this->getReportData($startDate, $endDate));
     }
 
     private function getReportData($startDate = null, $endDate = null)
@@ -77,6 +92,7 @@ class ReportController extends Controller
         Log::error("getData");
         Log::error($query->toSql());
         Log::error($query->pluck('total_amount'));
+        Log::error("ReportController.php getData");
         // return $type === 'category' ? $query->pluck('total_amount', 'period') : $query->get();
         return $type === 'category' ? $query->pluck('total_amount') : $query->get();
     }
