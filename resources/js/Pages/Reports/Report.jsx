@@ -22,7 +22,9 @@ import {
     PointElement,
     LineElement,
 } from "chart.js";
-import { useForm } from "@inertiajs/inertia-react";
+// import { useForm } from "@inertiajs/inertia-react";
+// import { useForm } from '@inertiajs/react';
+import { useForm } from "@inertiajs/react";
 import LineChart from "../../Components/LineChart";
 
 ChartJS.register(
