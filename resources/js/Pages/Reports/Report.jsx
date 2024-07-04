@@ -9,7 +9,7 @@ import {
     TextField,
     Button,
 } from "@mui/material";
-import { Bar, Doughnut } from "react-chartjs-2";
+import { Bar, Doughnut, Line } from "react-chartjs-2";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -22,9 +22,9 @@ import {
     PointElement,
     LineElement,
 } from "chart.js";
+import { useForm } from "@inertiajs/react";
 // import { useForm } from "@inertiajs/inertia-react";
 // import { useForm } from '@inertiajs/react';
-import { useForm } from "@inertiajs/react";
 import LineChart from "../../Components/LineChart";
 
 ChartJS.register(
@@ -39,90 +39,40 @@ ChartJS.register(
     LineElement
 );
 
-const Report = ({
-    monthlyIncome,
-    monthlyExpense,
-    incomeByCategory,
-    expenseByCategory,
-    dailyIncome,
-    dailyExpense,
-}) => {
-    const theme = useTheme();
-    const isWideScreen = useMediaQuery(theme.breakpoints.up("md"));
-
-    const incomeData = {
-        labels: Object.keys(monthlyIncome),
-        datasets: [
-            {
-                label: "収入",
-                data: Object.values(monthlyIncome),
-                backgroundColor: "rgba(75, 192, 192, 0.6)",
-                borderColor: "rgba(75, 192, 192, 1)",
-                borderWidth: 1,
-            },
-        ],
-    };
-
-    const expenseData = {
-        labels: Object.keys(monthlyExpense),
-        datasets: [
-            {
-                label: "支出",
-                data: Object.values(monthlyExpense),
-                backgroundColor: "rgba(255, 99, 132, 0.6)",
-                borderColor: "rgba(255, 99, 132, 1)",
-                borderWidth: 1,
-            },
-        ],
-    };
-
-    const incomeByCategoryData = {
-        labels: Object.keys(incomeByCategory),
-        datasets: [
-            {
-                label: "カテゴリー別収入",
-                data: Object.values(incomeByCategory),
-                backgroundColor: [
-                    "rgba(75, 192, 192, 0.6)",
-                    "rgba(54, 162, 235, 0.6)",
-                    "rgba(255, 206, 86, 0.6)",
-                ],
-            },
-        ],
-    };
-
-    const expenseByCategoryData = {
-        labels: Object.keys(expenseByCategory),
-        datasets: [
-            {
-                label: "カテゴリー別支出",
-                data: Object.values(expenseByCategory),
-                backgroundColor: [
-                    "rgba(255, 99, 132, 0.6)",
-                    "rgba(153, 102, 255, 0.6)",
-                    "rgba(255, 159, 64, 0.6)",
-                ],
-            },
-        ],
-    };
-
-    const chartData = {
-        dailyLabels: dailyIncome.map((item) => item.day),
-        dailyIncome: dailyIncome.map((item) => item.total_amount),
-        dailyExpense: dailyExpense.map((item) => item.total_amount),
-    };
-
-    const { data, setData, get } = useForm({
+const Report = ({ initialData }) => {
+    const [data, setData] = useState(initialData);
+    const {
+        data: formData,
+        setData: setFormData,
+        post,
+    } = useForm({
         startDate: "",
         endDate: "",
     });
 
-    const handleSearch = (e) => {
+    const theme = useTheme();
+    const isWideScreen = useMediaQuery(theme.breakpoints.up("md"));
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        get(route("reports.search"), {
-            preserveState: true,
-            preserveScroll: true,
+        post(route("report.search"), {
+            onSuccess: (page) => {
+                setData(page.props.data);
+            },
         });
+    };
+
+    const chartOptions = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: "top",
+            },
+            title: {
+                display: true,
+                text: "Chart.js Line Chart",
+            },
+        },
     };
 
     return (
