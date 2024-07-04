@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -12,22 +11,11 @@ class ReportController extends Controller
 {
     public function index()
     {
-        // 初期データの取得
         $initialData = $this->getReportData();
-        Log::error("ReportController index()");
-        Log::error($initialData);
 
         return inertia('Reports/Report', [
             'initialData' => $initialData
         ]);
-        // return inertia('Reports/Report', [
-        //     'monthlyIncome' => $this->getData('monthly', 'income'),
-        //     'monthlyExpense' => $this->getData('monthly', 'expense'),
-        //     'incomeByCategory' => $this->getData('category', 'income'),
-        //     'expenseByCategory' => $this->getData('category', 'expense'),
-        //     'dailyIncome' => $this->getData('daily', 'income'),
-        //     'dailyExpense' => $this->getData('daily', 'expense'),
-        // ]);
     }
 
     public function search(Request $request)
@@ -35,13 +23,9 @@ class ReportController extends Controller
         $startDate = Carbon::parse($request->startDate)->startOfDay();
         $endDate = Carbon::parse($request->endDate)->endOfDay();
 
-        $reportData = $this->getReportData($startDate, $endDate);
-        Log::error("reportData");
-        Log::error($reportData);
-        return Inertia::render('Reports/Report', [
-            'initialData' => $reportData
-        ]);
-        // return Inertia::render('Reports/Report', $this->getReportData($startDate, $endDate));
+        $data = $this->getReportData($startDate, $endDate);
+
+        return Inertia::render('Reports/Report', ['data' => $data]);
     }
 
     private function getReportData($startDate = null, $endDate = null)
@@ -62,16 +46,13 @@ class ReportController extends Controller
 
         switch($type) {
             case 'monthly':
-                $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as month'), DB::raw('SUM(amount) as total_amount'));
-                // $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as period'), DB::raw('SUM(amount) as total_amount'));
+                $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as period'), DB::raw('SUM(amount) as total_amount'));
                 break;
             case 'category':
-                $query->select('category', DB::raw('SUM(amount) as total_amount'));
-                // $query->select('category as period', DB::raw('SUM(amount) as total_amount'));
+                $query->select('category as period', DB::raw('SUM(amount) as total_amount'));
                 break;
             case 'daily':
-                $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m-%d") as day'), DB::raw('SUM(amount) as total_amount'));
-                // $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m-%d") as period'), DB::raw('SUM(amount) as total_amount'));
+                $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m-%d") as period'), DB::raw('SUM(amount) as total_amount'));
                 break;
         }
 
@@ -81,19 +62,12 @@ class ReportController extends Controller
             $query->whereBetween('date', [$startDate, $endDate]);
         }
 
-        if($type === 'monthly') {
-            $query->groupBy(DB::raw('DATE_FORMAT(date, "%Y-%m")'))->orderBy(DB::raw('DATE_FORMAT(date, "%Y-%m")'));
-        } else if($type === 'daily') {
-            $query->groupBy(DB::raw('DATE_FORMAT(date, "%Y-%m-%d")'))->orderBy(DB::raw('DATE_FORMAT(date, "%Y-%m-%d")'));
+        if($type === 'monthly' || $type === 'daily') {
+            $query->groupBy('period')->orderBy('period');
         } else if($type === 'category') {
             $query->groupBy('category');
         }
 
-        Log::error("getData");
-        Log::error($query->toSql());
-        Log::error($query->pluck('total_amount'));
-        Log::error("ReportController.php getData");
-        // return $type === 'category' ? $query->pluck('total_amount', 'period') : $query->get();
-        return $type === 'category' ? $query->pluck('total_amount') : $query->get();
+        return $query->pluck('total_amount', 'period');
     }
 }
