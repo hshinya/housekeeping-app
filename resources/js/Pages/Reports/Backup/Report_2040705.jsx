@@ -23,6 +23,9 @@ import {
     LineElement,
 } from "chart.js";
 import { useForm } from "@inertiajs/react";
+// import { useForm } from "@inertiajs/inertia-react";
+// import { useForm } from '@inertiajs/react';
+import LineChart from "../../Components/LineChart";
 
 ChartJS.register(
     CategoryScale,
@@ -39,15 +42,14 @@ ChartJS.register(
 const Report = ({ initialData }) => {
     const [data, setData] = useState(
         initialData || {
-            monthlyIncome: {},
-            monthlyExpense: {},
-            incomeByCategory: {},
-            expenseByCategory: {},
-            dailyIncome: {},
-            dailyExpense: {},
+            monthlyIncome: [],
+            monthlyExpense: [],
+            incomeByCategory: [],
+            expenseByCategory: [],
+            dailyIncome: [],
+            dailyExpense: [],
         }
     );
-
     const {
         data: formData,
         setData: setFormData,
@@ -62,16 +64,16 @@ const Report = ({ initialData }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("reports.search"), {
+        post(route("report.search"), {
             onSuccess: (page) => {
                 setData(
                     page.props.data || {
-                        monthlyIncome: {},
-                        monthlyExpense: {},
-                        incomeByCategory: {},
-                        expenseByCategory: {},
-                        dailyIncome: {},
-                        dailyExpense: {},
+                        monthlyIncome: [],
+                        monthlyExpense: [],
+                        incomeByCategory: [],
+                        expenseByCategory: [],
+                        dailyIncome: [],
+                        dailyExpense: [],
                     }
                 );
             },
@@ -91,52 +93,15 @@ const Report = ({ initialData }) => {
         },
     };
 
-    const incomeColorPalette = [
-        "#36A2EB",
-        "#4BC0C0",
-        "#9966FF",
-        "#FF9F40",
-        "#FF6384",
-        "#FFCE56",
-    ];
-
-    const expenseColorPalette = [
-        "#FF6384",
-        "#FFCE56",
-        "#FF9F40",
-        "#4BC0C0",
-        "#36A2EB",
-        "#9966FF",
-    ];
-
-    const formatChartData = (data, isIncome) => {
-        const colorPalette = isIncome
-            ? incomeColorPalette
-            : expenseColorPalette;
-        return {
-            labels: Object.keys(data),
-            datasets: [
-                {
-                    label: isIncome ? "Income" : "Expense",
-                    data: Object.values(data),
-                    backgroundColor: colorPalette,
-                    borderColor: colorPalette,
-                    borderWidth: 1,
-                },
-            ],
-        };
-    };
-
     return (
         <Layout>
             <Typography variant="h4" gutterBottom>
                 レポート
             </Typography>
 
-            <form onSubmit={handleSubmit} method="POST">
-                <input type="hidden" name="_method" value="POST" />
+            <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={4}>
                         <TextField
                             label="開始日"
                             type="date"
@@ -150,7 +115,7 @@ const Report = ({ initialData }) => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} md={5}>
+                    <Grid item xs={12} md={4}>
                         <TextField
                             label="終了日"
                             type="date"
@@ -164,7 +129,7 @@ const Report = ({ initialData }) => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} md={2}>
+                    <Grid item xs={12} md={4}>
                         <Button
                             type="submit"
                             variant="contained"
@@ -175,18 +140,14 @@ const Report = ({ initialData }) => {
                         </Button>
                     </Grid>
                 </Grid>
-            </form>
-
-            <Grid container spacing={4} style={{ marginTop: "20px" }}>
+            </Box>
+            <Grid container spacing={4}>
                 <Grid item xs={12} md={6}>
                     <Box sx={{ width: "100%" }}>
                         <Typography variant="h6" gutterBottom>
                             月別収入
                         </Typography>
-                        <Bar
-                            data={formatChartData(data.monthlyIncome, true)}
-                            options={chartOptions}
-                        />
+                        <Bar data={data.monthlyIncome} />
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -194,10 +155,7 @@ const Report = ({ initialData }) => {
                         <Typography variant="h6" gutterBottom>
                             月別支出
                         </Typography>
-                        <Bar
-                            data={formatChartData(data.monthlyExpense, false)}
-                            options={chartOptions}
-                        />
+                        <Bar data={data.monthlyExpense} />
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -205,9 +163,7 @@ const Report = ({ initialData }) => {
                         <Typography variant="h6" gutterBottom>
                             カテゴリー別収入
                         </Typography>
-                        <Doughnut
-                            data={formatChartData(data.incomeByCategory, true)}
-                        />
+                        <Doughnut data={data.incomeByCategory} />
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -215,35 +171,42 @@ const Report = ({ initialData }) => {
                         <Typography variant="h6" gutterBottom>
                             カテゴリー別支出
                         </Typography>
-                        <Doughnut
-                            data={formatChartData(
-                                data.expenseByCategory,
-                                false
-                            )}
-                        />
+                        <Doughnut data={data.expenseByCategory} />
                     </Box>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ width: "100%" }}>
-                        <Typography variant="h6" gutterBottom>
-                            日別収入
-                        </Typography>
-                        <Line
-                            data={formatChartData(data.dailyIncome, true)}
-                            options={chartOptions}
-                        />
-                    </Box>
+                    <Typography variant="h6">日別収入</Typography>
+                    <LineChart
+                        data={{
+                            labels: "data.dailyLabels",
+                            datasets: [
+                                {
+                                    label: "日別収入",
+                                    data: data.dailyIncome,
+                                    borderColor: "rgba(75, 192, 192, 1)",
+                                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                                    fill: true,
+                                },
+                            ],
+                        }}
+                    />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Box sx={{ width: "100%" }}>
-                        <Typography variant="h6" gutterBottom>
-                            日別支出
-                        </Typography>
-                        <Line
-                            data={formatChartData(data.dailyExpense, false)}
-                            options={chartOptions}
-                        />
-                    </Box>
+                    <Typography variant="h6">日別支出</Typography>
+                    <LineChart
+                        data={{
+                            labels: "data.dailyExpense",
+                            datasets: [
+                                {
+                                    label: "日別支出",
+                                    data: data.dailyExpense,
+                                    borderColor: "rgba(255, 99, 132, 1)",
+                                    backgroundColor: "rgba(255, 99, 132, 0.2)",
+                                    fill: true,
+                                },
+                            ],
+                        }}
+                    />
                 </Grid>
             </Grid>
         </Layout>

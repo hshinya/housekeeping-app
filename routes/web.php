@@ -58,6 +58,6 @@ Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->
 
 // レポートページ
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
-Route::post('/reports/search', [ReportController::class, 'search']);
+Route::post('/reports/search', [ReportController::class, 'search'])->name('reports.search');
 
 require __DIR__.'/auth.php';
