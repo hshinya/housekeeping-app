@@ -25,18 +25,9 @@ class TransactionController extends Controller
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'date' => 'required|date',
-            'type' => 'required|string',
-            'category' => 'nullable|string',
         ]);
 
-        Transaction::create([
-            'description' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'date' => 'required|date',
-            'type' => 'required|string',
-            'category' => 'nullable|string',
-        ]);
-
+        Transaction::create($request->all());
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
     }
 
@@ -52,8 +43,6 @@ class TransactionController extends Controller
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'date' => 'required|date',
-            'type' => 'required|string',
-            'category' => 'nullable|string',
         ]);
 
         $transaction = Transaction::findOrFail($id);
