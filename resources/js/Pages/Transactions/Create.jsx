@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
-import { TextField, Button, Grid, Paper, Typography } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Grid,
+    Paper,
+    Typography,
+    MenuItem,
+} from "@mui/material";
 import Layout from "../../Components/Layout";
 
 function Create() {
@@ -8,6 +15,8 @@ function Create() {
         description: "",
         amount: "",
         date: "",
+        type: "",
+        category: "",
     });
 
     const handleChange = (e) => {
@@ -58,6 +67,26 @@ function Create() {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                            />
+                            <TextField
+                                fullWidth
+                                label="Type"
+                                name="type"
+                                value={values.type}
+                                onChange={handleChange}
+                                margin="normal"
+                                required
+                            >
+                                <MenuItem value="income">収入</MenuItem>
+                                <MenuItem value="expense">支出</MenuItem>
+                            </TextField>
+                            <TextField
+                                fullWidth
+                                label="Category"
+                                name="category"
+                                value={values.category}
+                                onChange={handleChange}
+                                margin="normal"
                             />
                             <Button
                                 variant="contained"

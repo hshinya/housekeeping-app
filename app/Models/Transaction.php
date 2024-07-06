@@ -13,5 +13,7 @@ class Transaction extends Model
         'description',
         'amount',
         'date',
+        'type',
+        'category',
     ];
 }
