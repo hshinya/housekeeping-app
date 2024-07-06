@@ -19,6 +19,7 @@ class DashbordController extends Controller
                 ['id' => 2, 'description' => '給料', 'amount' => 210000, 'date' => '2024/06/02'],
                 ['id' => 3, 'description' => '家賃', 'amount' => 90000, 'date' => '2024/06/02'],
                 ['id' => 4, 'description' => '食費', 'amount' => 5000, 'date' => '2024/06/12'],
+                ['id' => 5, 'description' => '食費', 'amount' => 5000, 'date' => '2024/07/02'],
             ],
         ];
 
