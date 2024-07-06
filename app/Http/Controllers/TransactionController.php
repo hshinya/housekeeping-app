@@ -25,16 +25,16 @@ class TransactionController extends Controller
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'date' => 'required|date',
-            'type' => 'required|string',
-            'category' => 'nullable|string',
+            'type' => 'required|string|in:income,expense',
+            'category' => 'nullable|string|max:255',
         ]);
 
         Transaction::create([
-            'description' => 'required|string|max:255',
-            'amount' => 'required|numeric',
-            'date' => 'required|date',
-            'type' => 'required|string',
-            'category' => 'nullable|string',
+            'description' => $request->input('description'),
+            'amount' => $request->input('amount'),
+            'date' => $request->input('date'),
+            'type' => $request->input('type'),
+            'category' => $request->input('category'),
         ]);
 
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
@@ -52,12 +52,18 @@ class TransactionController extends Controller
             'description' => 'required|string|max:255',
             'amount' => 'required|numeric',
             'date' => 'required|date',
-            'type' => 'required|string',
-            'category' => 'nullable|string',
+            'type' => 'required|string|in:income,expense',
+            'category' => 'nullable|string|max:255',
         ]);
 
         $transaction = Transaction::findOrFail($id);
-        $transaction->update($request->all());
+        $transaction->update([
+            'description' => $request->input('description'),
+            'amount' => $request->input('amount'),
+            'date' => $request->input('date'),
+            'type' => $request->input('type'),
+            'category' => $request->input('category'),
+        ]);
 
         return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully.');
     }
@@ -67,6 +73,6 @@ class TransactionController extends Controller
         $transaction = Transaction::findOrFail($id);
         $transaction->delete();
 
-        return redirect()->route('transactions.index')->with('success', 'transaction deleted successfully.');
+        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully.');
     }
 }
