@@ -38,7 +38,7 @@ function Create() {
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
-                                label="内容"
+                                label="Description"
                                 name="description"
                                 value={values.description}
                                 onChange={handleChange}
@@ -47,7 +47,7 @@ function Create() {
                             />
                             <TextField
                                 fullWidth
-                                label="金額"
+                                label="Amount"
                                 name="amount"
                                 type="number"
                                 value={values.amount}
@@ -57,7 +57,7 @@ function Create() {
                             />
                             <TextField
                                 fullWidth
-                                label="日付"
+                                label="Date"
                                 name="date"
                                 type="date"
                                 value={values.date}
@@ -70,6 +70,7 @@ function Create() {
                             />
                             <TextField
                                 fullWidth
+                                select
                                 label="Type"
                                 name="type"
                                 value={values.type}
@@ -77,8 +78,8 @@ function Create() {
                                 margin="normal"
                                 required
                             >
-                                <MenuItem value="income">収入</MenuItem>
-                                <MenuItem value="expense">支出</MenuItem>
+                                <MenuItem value="income">Income</MenuItem>
+                                <MenuItem value="expense">Expense</MenuItem>
                             </TextField>
                             <TextField
                                 fullWidth
@@ -94,7 +95,7 @@ function Create() {
                                 type="submit"
                                 style={{ marginTop: "20px" }}
                             >
-                                追加
+                                Add
                             </Button>
                         </form>
                     </Paper>
