@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
-import { TextField, Button, Grid, Paper, Typography } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Grid,
+    Paper,
+    Typography,
+    MenuItem,
+} from "@mui/material";
 import Layout from "../../Components/Layout";
 
 const Edit = ({ category }) => {
     const [values, setValues] = useState({
         name: category.name,
+        type: category.type,
     });
 
     const handleChange = (e) => {
@@ -34,6 +42,19 @@ const Edit = ({ category }) => {
                                 margin="normal"
                                 required
                             />
+                            <TextField
+                                select
+                                fullWidth
+                                label="Type"
+                                name="type"
+                                value={values.type}
+                                onChange={handleChange}
+                                margin="normal"
+                                required
+                            >
+                                <MenuItem value="income">Income</MenuItem>
+                                <MenuItem value="expense">Expense</MenuItem>
+                            </TextField>
                             <Button
                                 variant="contained"
                                 color="primary"

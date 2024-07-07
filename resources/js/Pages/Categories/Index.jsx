@@ -5,7 +5,6 @@ import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import Layout from "../../Components/Layout";
 
 const Index = ({ categories }) => {
-
     const handleDelete = (id) => {
         if (confirm("Are you sure you want to delete this category?")) {
             Inertia.delete(route("categories.destroy", id));
@@ -37,17 +36,24 @@ const Index = ({ categories }) => {
                                     alignItems: "center",
                                 }}
                             >
-                                <Typography>{category.name}</Typography>
+                                <Typography>
+                                    {category.name} ({category.type})
+                                </Typography>
                                 <div>
                                     <IconButton
                                         color="primary"
-                                        href={route("categories.edit", category.id)}
+                                        href={route(
+                                            "categories.edit",
+                                            category.id
+                                        )}
                                     >
                                         <EditIcon />
                                     </IconButton>
                                     <IconButton
                                         color="secondary"
-                                        onClick={() => handleDelete(category.id)}
+                                        onClick={() =>
+                                            handleDelete(category.id)
+                                        }
                                     >
                                         <DeleteIcon />
                                     </IconButton>
