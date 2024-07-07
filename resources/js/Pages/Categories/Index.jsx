@@ -1,42 +1,64 @@
 import React from "react";
-import { InertiaLink, usePage } from "@inertiajs/inertia-react";
+import { Inertia } from "@inertiajs/inertia";
+import { Button, Grid, Paper, Typography, IconButton } from "@mui/material";
+import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import Layout from "../../Components/Layout";
 
-function Index() {
-    const { categories } = usePage().props;
+const Index = ({ categories }) => {
+
+    const handleDelete = (id) => {
+        if (confirm("Are you sure you want to delete this category?")) {
+            Inertia.delete(route("categories.destroy", id));
+        }
+    };
 
     return (
         <Layout title="Categories">
-            <h1>Categories</h1>
-            <InertiaLink
-                href={route("categories.create")}
-                className="btn btn-primary"
-            >
-                Add Category
-            </InertiaLink>
-            <ul>
-                {categories.map((category) => (
-                    <li key={category.id}>
-                        {category.name}
-                        <InertiaLink
-                            href={route("categories.edit", category.id)}
-                            className="btn btn-secondary"
+            <Grid container justifyContent="center">
+                <Grid item xs={12} md={8}>
+                    <Paper style={{ padding: "20px" }}>
+                        <Typography variant="h6">Categories</Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            href={route("categories.create")}
+                            style={{ marginBottom: "20px" }}
                         >
-                            Edit
-                        </InertiaLink>
-                        <InertiaLink
-                            href={route("categories.destroy", category.id)}
-                            method="delete"
-                            className="btn btn-danger"
-                            as="button"
-                        >
-                            Delete
-                        </InertiaLink>
-                    </li>
-                ))}
-            </ul>
+                            Add Category
+                        </Button>
+                        {categories.map((category) => (
+                            <Paper
+                                key={category.id}
+                                style={{
+                                    padding: "10px",
+                                    marginBottom: "10px",
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Typography>{category.name}</Typography>
+                                <div>
+                                    <IconButton
+                                        color="primary"
+                                        href={route("categories.edit", category.id)}
+                                    >
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton
+                                        color="secondary"
+                                        onClick={() => handleDelete(category.id)}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </div>
+                            </Paper>
+                        ))}
+                    </Paper>
+                </Grid>
+            </Grid>
         </Layout>
     );
-}
+};
 
 export default Index;

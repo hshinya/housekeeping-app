@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
 import { TextField, Button, Grid, Paper, Typography } from "@mui/material";
 import Layout from "../../Components/Layout";
 
-function Edit({ category }) {
+const Edit = ({ category }) => {
     const [values, setValues] = useState({
-        name: "",
+        name: category.name,
     });
-
-    useEffect(() => {
-        setValues({
-            name: category.name,
-        });
-    }, [category]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -33,7 +27,7 @@ function Edit({ category }) {
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
-                                label="Name"
+                                label="Category Name"
                                 name="name"
                                 value={values.name}
                                 onChange={handleChange}
@@ -54,6 +48,6 @@ function Edit({ category }) {
             </Grid>
         </Layout>
     );
-}
+};
 
 export default Edit;
