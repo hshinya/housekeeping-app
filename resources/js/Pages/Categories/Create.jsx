@@ -3,7 +3,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { TextField, Button, Grid, Paper, Typography } from "@mui/material";
 import Layout from "../../Components/Layout";
 
-function Create() {
+const Create = () => {
     const [values, setValues] = useState({
         name: "",
     });
@@ -27,7 +27,7 @@ function Create() {
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
-                                label="Name"
+                                label="Category Name"
                                 name="name"
                                 value={values.name}
                                 onChange={handleChange}
@@ -48,6 +48,6 @@ function Create() {
             </Grid>
         </Layout>
     );
-}
+};
 
 export default Create;
