@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,7 +17,8 @@ class TransactionController extends Controller
 
     public function create()
     {
-        return Inertia::render('Transactions/Create');
+        $categories = Category::all();
+        return Inertia::render('Transactions/Create', ['categories' => $categories]);
     }
 
     public function store(Request $request)
@@ -26,7 +28,7 @@ class TransactionController extends Controller
             'amount' => 'required|numeric',
             'date' => 'required|date',
             'type' => 'required|string|in:income,expense',
-            'category' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         Transaction::create([
@@ -34,7 +36,7 @@ class TransactionController extends Controller
             'amount' => $request->input('amount'),
             'date' => $request->input('date'),
             'type' => $request->input('type'),
-            'category' => $request->input('category'),
+            'category_id' => $request->input('category_id'),
         ]);
 
         return redirect()->route('transactions.index')->with('success', 'Transaction created successfully.');
@@ -43,7 +45,8 @@ class TransactionController extends Controller
     public function edit($id)
     {
         $transaction = Transaction::findOrFail($id);
-        return Inertia::render('Transactions/Edit', ['transaction' => $transaction]);
+        $categories = Category::all();
+        return Inertia::render('Transactions/Edit', ['transaction' => $transaction, 'categories' => $categories]);
     }
 
     public function update(Request $request, $id)
@@ -53,7 +56,7 @@ class TransactionController extends Controller
             'amount' => 'required|numeric',
             'date' => 'required|date',
             'type' => 'required|string|in:income,expense',
-            'category' => 'nullable|string|max:255',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         $transaction = Transaction::findOrFail($id);
@@ -62,7 +65,7 @@ class TransactionController extends Controller
             'amount' => $request->input('amount'),
             'date' => $request->input('date'),
             'type' => $request->input('type'),
-            'category' => $request->input('category'),
+            'category_id' => $request->input('category_id'),
         ]);
 
         return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully.');
