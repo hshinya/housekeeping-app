@@ -16,9 +16,16 @@ class CategoryController extends Controller
     //     return Inertia::render('Category', ['categories' => $categories]);
     // }
 
-    public function index()
+    public function index(Request $request)
     {
         $categories = Category::all();
+        // Log::error($categories);
+        // return Inertia::render('Categories/Index', ['categories' => $categories]);
+
+        if ($request->wantsJson()) {
+            return response()->json($categories);
+        }
+
         return Inertia::render('Categories/Index', ['categories' => $categories]);
     }
 

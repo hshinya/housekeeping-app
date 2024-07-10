@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
 import {
     TextField,
@@ -7,8 +7,12 @@ import {
     Paper,
     Typography,
     MenuItem,
+    Select,
+    InputLabel,
+    FormControl,
 } from "@mui/material";
 import Layout from "../../Components/Layout";
+import axios from "axios";
 
 function Create() {
     const [values, setValues] = useState({
@@ -16,8 +20,24 @@ function Create() {
         amount: "",
         date: "",
         type: "",
-        category: "",
+        category_id: "",
     });
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get("/categories")
+            .then((response) => {
+                console.log(typeof(response));
+                console.log(Array.isArray(response));
+                console.log(response);
+                setCategories(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching categories:", error);
+            });
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -68,27 +88,34 @@ function Create() {
                                     shrink: true,
                                 }}
                             />
-                            <TextField
-                                fullWidth
-                                select
-                                label="Type"
-                                name="type"
-                                value={values.type}
-                                onChange={handleChange}
-                                margin="normal"
-                                required
-                            >
-                                <MenuItem value="income">Income</MenuItem>
-                                <MenuItem value="expense">Expense</MenuItem>
-                            </TextField>
-                            <TextField
-                                fullWidth
-                                label="Category"
-                                name="category"
-                                value={values.category}
-                                onChange={handleChange}
-                                margin="normal"
-                            />
+                            <FormControl fullWidth margin="normal" required>
+                                <InputLabel>Type</InputLabel>
+                                <Select
+                                    name="type"
+                                    value={values.type}
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value="income">Income</MenuItem>
+                                    <MenuItem value="expense">Expense</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel>Category</InputLabel>
+                                <Select
+                                    name="category_id"
+                                    value={values.category_id}
+                                    onChange={handleChange}
+                                >
+                                    {categories.map((category) => (
+                                        <MenuItem
+                                            key={category.id}
+                                            value={category.id}
+                                        >
+                                            {category.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
                             <Button
                                 variant="contained"
                                 color="primary"
