@@ -1,19 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
-import { TextField, Button, Grid, Paper, Typography, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Grid,
+    Paper,
+    Typography,
+    MenuItem,
+    Select,
+    InputLabel,
+    FormControl,
+} from "@mui/material";
 import Layout from "../../Components/Layout";
-import { usePage } from "@inertiajs/inertia-react";
+import axios from "axios";
 
-function Edit({ categories }) {
-    const { transaction } = usePage().props;
-
+function Create() {
     const [values, setValues] = useState({
-        description: transaction.description || "",
-        amount: transaction.amount || "",
-        date: transaction.date || "",
-        type: transaction.type || "",
-        category_id: transaction.category_id || "",
+        description: "",
+        amount: "",
+        date: "",
+        type: "",
+        category_id: "",
     });
+
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get("/categories")
+            .then((response) => {
+                // Ensure the response data is an array
+                if (Array.isArray(response.data)) {
+                    setCategories(response.data);
+                } else {
+                    console.error("Unexpected response format:", response.data);
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching categories:", error);
+            });
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,15 +48,15 @@ function Edit({ categories }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        Inertia.post(route("transactions.update", transaction.id), values);
+        Inertia.post(route("transactions.store"), values);
     };
 
     return (
-        <Layout title="Edit Transaction">
+        <Layout title="Add Transaction">
             <Grid container justifyContent="center">
                 <Grid item xs={12} md={6}>
                     <Paper style={{ padding: "20px" }}>
-                        <Typography variant="h6">Edit Transaction</Typography>
+                        <Typography variant="h6">Add Transaction</Typography>
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
@@ -82,8 +108,11 @@ function Edit({ categories }) {
                                     value={values.category_id}
                                     onChange={handleChange}
                                 >
-                                    {categories.map(category => (
-                                        <MenuItem key={category.id} value={category.id}>
+                                    {categories.map((category) => (
+                                        <MenuItem
+                                            key={category.id}
+                                            value={category.id}
+                                        >
                                             {category.name}
                                         </MenuItem>
                                     ))}
@@ -95,7 +124,7 @@ function Edit({ categories }) {
                                 type="submit"
                                 style={{ marginTop: "20px" }}
                             >
-                                Update
+                                Add
                             </Button>
                         </form>
                     </Paper>
@@ -105,4 +134,4 @@ function Edit({ categories }) {
     );
 }
 
-export default Edit;
+export default Create;
