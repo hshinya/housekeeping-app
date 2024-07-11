@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
-import { TextField, Button, Grid, Paper, Typography, MenuItem, Select, InputLabel, FormControl } from "@mui/material";
+import {
+    TextField,
+    Button,
+    Grid,
+    Paper,
+    Typography,
+    MenuItem,
+    Select,
+    InputLabel,
+    FormControl,
+} from "@mui/material";
 import Layout from "../../Components/Layout";
 import { usePage } from "@inertiajs/inertia-react";
 
@@ -82,8 +92,11 @@ function Edit({ categories }) {
                                     value={values.category_id}
                                     onChange={handleChange}
                                 >
-                                    {categories.map(category => (
-                                        <MenuItem key={category.id} value={category.id}>
+                                    {categories.map((category) => (
+                                        <MenuItem
+                                            key={category.id}
+                                            value={category.id}
+                                        >
                                             {category.name}
                                         </MenuItem>
                                     ))}
