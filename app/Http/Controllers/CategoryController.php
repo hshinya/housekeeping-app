@@ -19,7 +19,6 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $categories = Category::all();
-        // Log::error($categories);
         // return Inertia::render('Categories/Index', ['categories' => $categories]);
 
         if ($request->wantsJson()) {
