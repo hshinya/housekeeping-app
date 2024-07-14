@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Inertia } from "@inertiajs/inertia";
+import React, { useState } from "react";
+import { useForm } from "@inertiajs/react";
 import {
     TextField,
     Button,
@@ -7,106 +7,73 @@ import {
     Paper,
     Typography,
     MenuItem,
-    Select,
-    InputLabel,
-    FormControl,
 } from "@mui/material";
 import Layout from "../../Components/Layout";
-import { usePage } from "@inertiajs/inertia-react";
+import { usePage } from "@inertiajs/react";
+import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
-function Edit({ categories }) {
-    const { transaction } = usePage().props;
-
+function Edit() {
+    const { category } = usePage().props;
     const [values, setValues] = useState({
-        description: transaction.description || "",
-        amount: transaction.amount || "",
-        date: transaction.date || "",
-        type: transaction.type || "",
-        category_id: transaction.category_id || "",
+        name: category.name || "",
+        type: category.type || "",
     });
+
+    const { patch, processing, errors } = useForm(values);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(name);
+        console.log(value);
         setValues((values) => ({ ...values, [name]: value }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        Inertia.post(route("transactions.update", transaction.id), values);
+        console.log(e);
+        console.log(values);
+        patch(route("categories.update", category.id), values);
     };
 
     return (
-        <Layout title="Edit Transaction">
+        <Layout title="Edit Category">
             <Grid container justifyContent="center">
                 <Grid item xs={12} md={6}>
                     <Paper style={{ padding: "20px" }}>
-                        <Typography variant="h6">Edit Transaction</Typography>
+                        <Typography variant="h6">Edit Category</Typography>
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
-                                label="Description"
-                                name="description"
-                                value={values.description}
+                                label="Name"
+                                name="name"
+                                value={values.name}
                                 onChange={handleChange}
                                 margin="normal"
                                 required
+                                error={errors.name ? true : false}
+                                helperText={errors.name}
                             />
                             <TextField
                                 fullWidth
-                                label="Amount"
-                                name="amount"
-                                type="number"
-                                value={values.amount}
+                                select
+                                label="Type"
+                                name="type"
+                                value={values.type}
                                 onChange={handleChange}
                                 margin="normal"
                                 required
-                            />
-                            <TextField
-                                fullWidth
-                                label="Date"
-                                name="date"
-                                type="date"
-                                value={values.date}
-                                onChange={handleChange}
-                                margin="normal"
-                                required
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                            <FormControl fullWidth margin="normal" required>
-                                <InputLabel>Type</InputLabel>
-                                <Select
-                                    name="type"
-                                    value={values.type}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="income">Income</MenuItem>
-                                    <MenuItem value="expense">Expense</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <FormControl fullWidth margin="normal">
-                                <InputLabel>Category</InputLabel>
-                                <Select
-                                    name="category_id"
-                                    value={values.category_id}
-                                    onChange={handleChange}
-                                >
-                                    {categories.map((category) => (
-                                        <MenuItem
-                                            key={category.id}
-                                            value={category.id}
-                                        >
-                                            {category.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
+                                error={errors.type ? true : false}
+                                helperText={errors.type}
+                            >
+                                <MenuItem value="income">Income</MenuItem>
+                                <MenuItem value="expense">Expense</MenuItem>
+                            </TextField>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 type="submit"
                                 style={{ marginTop: "20px" }}
+                                disabled={processing}
                             >
                                 Update
                             </Button>
