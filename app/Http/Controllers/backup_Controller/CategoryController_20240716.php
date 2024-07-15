@@ -9,9 +9,17 @@ use Inertia\Inertia;
 
 class CategoryController extends Controller
 {
+    // テスト
+    // public function index() {
+    //     $categories = Category::all();
+    //     // return view('index', ['categories' => $categories]);
+    //     return Inertia::render('Category', ['categories' => $categories]);
+    // }
+
     public function index(Request $request)
     {
         $categories = Category::all();
+        // return Inertia::render('Categories/Index', ['categories' => $categories]);
 
         if ($request->wantsJson()) {
             return response()->json($categories);
@@ -31,12 +39,7 @@ class CategoryController extends Controller
             'name' => 'required|string|max:255',
             'type' => 'required|string|in:income,expense',
         ]);
-
-        Category::create([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-        ]);
-
+        Category::create($request->all());
         return redirect()->route('categories.index')->with('success', 'Category created successfully!');
     }
 
@@ -54,12 +57,7 @@ class CategoryController extends Controller
             'type' => 'required|string|in:income,expense',
         ]);
         $category = Category::findOrFail($id);
-
-        $category->update([
-            'name' => $request->input('name'),
-            'type' => $request->input('type'),
-        ]);
-
+        $category->update($request->all());
         return redirect()->route('categories.index')->with('success', 'Category update successfully!');
     }
 
