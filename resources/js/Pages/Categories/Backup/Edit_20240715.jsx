@@ -10,17 +10,9 @@ import {
 } from "@mui/material";
 import Layout from "../../Components/Layout";
 import { usePage } from "@inertiajs/react";
-import { ConnectingAirportsOutlined } from "@mui/icons-material";
 
 function Edit() {
     const { category } = usePage().props;
-    // const [values, setValues] = useState({
-    //     name: category.name || "",
-    //     type: category.type || "",
-    // });
-
-    // const { patch, processing, errors } = useForm(values);
-
     const { data, setData, patch, processing, errors } = useForm({
         name: category.name || "",
         type: category.type || "",
@@ -29,12 +21,10 @@ function Edit() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setData(name, value);
-        // setValues((values) => ({ ...values, [name]: value }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // patch(route("categories.update", category.id), values);
         patch(route("categories.update", category.id), { data });
     };
 
