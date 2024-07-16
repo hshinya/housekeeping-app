@@ -49,7 +49,7 @@ class ReportController extends Controller
                 $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m") as period'), DB::raw('SUM(amount) as total_amount'));
                 break;
             case 'category':
-                $query->select('category as period', DB::raw('SUM(amount) as total_amount'));
+                $query->select('category_id as period', DB::raw('SUM(amount) as total_amount'));
                 break;
             case 'daily':
                 $query->select(DB::raw('DATE_FORMAT(date, "%Y-%m-%d") as period'), DB::raw('SUM(amount) as total_amount'));
@@ -65,7 +65,7 @@ class ReportController extends Controller
         if($type === 'monthly' || $type === 'daily') {
             $query->groupBy('period')->orderBy('period');
         } else if($type === 'category') {
-            $query->groupBy('category');
+            $query->groupBy('category_id');
         }
 
         return $query->pluck('total_amount', 'period');
