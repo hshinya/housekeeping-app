@@ -2,13 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class DashbordController extends Controller
 {
     public function index()
     {
+        // Transactionテーブルから必要なデータだけ取得するように変更する
+        $transactions = Transaction::all();
+        Log::error($transactions);
+        Log::error($transactions[0]);
+        Log::error(json_decode(json_encode($transactions[0]), true));
+        // Log::error(array_column($transactions[0], 'description'));
+
+
         // データの取得
         $data = [
             'income' => 1000, // 収入の総額
