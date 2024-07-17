@@ -12,6 +12,7 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles"; // useThemeをインポート
+import { Link } from "@inertiajs/react";
 
 const drawerWidth = 240; // Set drawer width
 
@@ -46,16 +47,25 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </IconButton>
             </Box>
             <List>
-                {["Inbox", "Starred", "Send email", "Drafts"].map(
-                    (text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItem>
-                    )
-                )}
+                {[
+                    "dashboard",
+                    "transactions",
+                    "category",
+                    "reports",
+                    "setting",
+                ].map((text, index) => (
+                    <ListItem
+                        button
+                        key={text}
+                        component={Link}
+                        href={`/${text}`}
+                    >
+                        <ListItemIcon>
+                            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                        </ListItemIcon>
+                        <ListItemText primary={text} />
+                    </ListItem>
+                ))}
             </List>
         </Drawer>
     );
