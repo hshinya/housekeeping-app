@@ -10,4 +10,10 @@ class Category extends Model
     use HasFactory;
 
     protected $fillable = ['name','type'];
+
+    // 予算とのリレーションシップを定義
+    public function budgets()
+    {
+        return $this->hasMany(Budget::class);
+    }
 }
