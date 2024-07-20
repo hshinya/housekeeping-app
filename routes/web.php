@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashbordController;
@@ -69,5 +70,8 @@ Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->
 // レポートページ
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 Route::post('/reports/search', [ReportController::class, 'search'])->name('reports.search');
+
+// 予算ページ
+Route::resource('budgets', BudgetController::class);
 
 require __DIR__.'/auth.php';
