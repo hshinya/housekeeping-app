@@ -1,6 +1,6 @@
 import Layout from "../../Components/Layout";
 import { useForm, usePage } from "@inertiajs/react";
-import { Grid, Paper, TextField, Typography } from "@mui/material";
+import { Grid, MenuItem, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 const CreateBudget = () => {
@@ -29,9 +29,48 @@ const CreateBudget = () => {
                     <Paper style={{ padding: "20px" }}>
                         <Typography variant="h6">Add Budget</Typography>
                         <form onSubmit={handleSubmit}>
-                            <TextField>
-                                
+                            <TextField
+                                fullWidth
+                                select
+                                label="Category"
+                                name="category_id"
+                                value={values.category_id}
+                                onChange={handleChange}
+                                margin="normal"
+                                required
+                                error={errors.category_id ? true : false}
+                                helperText={errors.category_id}
+                            >
+                                {categories.map((category) => {
+                                    <MenuItem
+                                        key={category.id}
+                                        value={category.id}
+                                    >
+                                        {category.name}
+                                    </MenuItem>;
+                                })}
                             </TextField>
+                            <TextField
+                                fullWidth
+                                label="Amount"
+                                name="amount"
+                                type="number"
+                                value={values.amount}
+                                onChange={handleChange}
+                                margin="nomal"
+                                required
+                                error={errors.amount ? true : false}
+                                helperText={errors.amount}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit"
+                                style={{ marginTop: "20px" }}
+                                disabled={processing}
+                            >
+                                Add
+                            </Button>
                         </form>
                     </Paper>
                 </Grid>
@@ -39,3 +78,5 @@ const CreateBudget = () => {
         </Layout>
     );
 };
+
+export default CreateBudget;
