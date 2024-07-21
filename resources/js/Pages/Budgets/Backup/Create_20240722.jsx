@@ -1,25 +1,25 @@
-import Layout from "../../Components/Layout";
-import { useForm, usePage } from "@inertiajs/react";
+import React, { useState } from "react";
+import { Inertia } from "@inertiajs/inertia";
 import {
+    TextField,
     Button,
     Grid,
-    MenuItem,
     Paper,
-    TextField,
     Typography,
+    MenuItem,
 } from "@mui/material";
-import React, { useState } from "react";
+import Layout from "../../Components/Layout";
+import { usePage } from "@inertiajs/react";
 
-const CreateBudget = () => {
+function Create() {
     const { categories } = usePage().props;
+
     const [values, setValues] = useState({
         category_id: "",
         amount: "",
         start_date: "",
         end_date: "",
     });
-
-    const { post, processing, errors } = useForm(values);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,9 +28,7 @@ const CreateBudget = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(e);
-        console.log(values);
-        post(route("budgets.store"), values);
+        Inertia.post(route("budgets.store"), values);
     };
 
     return (
@@ -49,8 +47,6 @@ const CreateBudget = () => {
                                 onChange={handleChange}
                                 margin="normal"
                                 required
-                                error={errors.category_id ? true : false}
-                                helperText={errors.category_id}
                             >
                                 {categories.map((category) => (
                                     <MenuItem
@@ -70,8 +66,6 @@ const CreateBudget = () => {
                                 onChange={handleChange}
                                 margin="normal"
                                 required
-                                error={errors.amount ? true : false}
-                                helperText={errors.amount}
                             />
                             <TextField
                                 fullWidth
@@ -82,24 +76,28 @@ const CreateBudget = () => {
                                 onChange={handleChange}
                                 margin="normal"
                                 required
-                                InputLabelProps={{ shrink: true }}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
                             <TextField
                                 fullWidth
                                 label="End Date"
                                 name="end_date"
                                 type="date"
+                                value={values.end_date}
                                 onChange={handleChange}
                                 margin="normal"
                                 required
-                                InputLabelProps={{ shrink: true }}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                             />
                             <Button
                                 variant="contained"
                                 color="primary"
                                 type="submit"
                                 style={{ marginTop: "20px" }}
-                                disabled={processing}
                             >
                                 Add
                             </Button>
@@ -109,6 +107,6 @@ const CreateBudget = () => {
             </Grid>
         </Layout>
     );
-};
+}
 
-export default CreateBudget;
+export default Create;
