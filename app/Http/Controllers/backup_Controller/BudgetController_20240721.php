@@ -43,7 +43,7 @@ class BudgetController extends Controller
             'category_id' => 'required|exists:categories,id',
             'amount' => 'required|numeric',
             'start_date' => 'required|date',
-            'end_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
         Budget::create($request->all());
