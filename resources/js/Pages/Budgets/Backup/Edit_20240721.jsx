@@ -1,16 +1,24 @@
-import Layout from "../../Components/Layout";
-import { useForm, usePage } from "@inertiajs/react";
-import { Button, Grid, MenuItem, Paper, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { useForm, Link } from "@inertiajs/react";
+import {
+    TextField,
+    Button,
+    Grid,
+    Paper,
+    Typography,
+    MenuItem,
+} from "@mui/material";
+import Layout from "../../Components/Layout";
+import { usePage } from "@inertiajs/react";
 
-const CreateBudget = () => {
-    const { categories } = usePage().props;
+const EditBudget = () => {
+    const { budget, categories } = usePage().props;
     const [values, setValues] = useState({
-        category_id: "",
-        amount: "",
+        category_id: budget.category_id || "",
+        amount: budget.amount || "",
     });
 
-    const { post, processing, errors } = useForm(values);
+    const { patch, processing, errors } = useForm(values);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -19,15 +27,15 @@ const CreateBudget = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route("budgets.store"), values);
+        patch(route("budgets.update", budget.id), values);
     };
 
     return (
-        <Layout title="Add Budget">
+        <Layout title="Edit Budget">
             <Grid container justifyContent="center">
                 <Grid item xs={12} md={6}>
                     <Paper style={{ padding: "20px" }}>
-                        <Typography variant="h6">Add Budget</Typography>
+                        <Typography variant="h6">Edit Budget</Typography>
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
@@ -69,7 +77,7 @@ const CreateBudget = () => {
                                 style={{ marginTop: "20px" }}
                                 disabled={processing}
                             >
-                                Add
+                                Update
                             </Button>
                         </form>
                     </Paper>
@@ -79,4 +87,4 @@ const CreateBudget = () => {
     );
 };
 
-export default CreateBudget;
+export default EditBudget;

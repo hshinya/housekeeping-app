@@ -64,8 +64,9 @@ class BudgetController extends Controller
      * @param \App\Models\Budget $budget
      * @return \Inertia\Response
      */
-    public function edit(Budget $budget)
+    public function edit($id)
     {
+        $budget = Budget::findOrFail($id);
         $categories = Category::all();
         return Inertia::render('Budgets/Edit', [
             'budget' => $budget,

@@ -1,19 +1,21 @@
-import Layout from "../../Components/Layout";
-import { Link, usePage } from "@inertiajs/react";
 import React from "react";
+import { Link } from "@inertiajs/react";
 import {
-    Button,
-    Paper,
     Table,
     TableBody,
     TableCell,
     TableHead,
     TableRow,
+    Button,
+    Paper,
     Typography,
 } from "@mui/material";
+import Layout from "../../Components/Layout";
+import { usePage } from "@inertiajs/react";
 
 const BudgetIndex = () => {
     const { budgets } = usePage().props;
+
     return (
         <Layout title="Budgets">
             <Paper style={{ padding: "20px" }}>
