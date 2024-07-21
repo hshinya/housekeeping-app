@@ -1,20 +1,20 @@
-import Layout from "../../Components/Layout";
+import React, { useState } from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import {
+    TextField,
     Button,
     Grid,
-    MenuItem,
     Paper,
-    TextField,
     Typography,
+    MenuItem,
 } from "@mui/material";
-import React, { useState } from "react";
+import Layout from "../../Components/Layout";
 
 const EditBudget = () => {
     const { budget, categories } = usePage().props;
     const [values, setValues] = useState({
-        category_id: budget.category_id,
-        amout: budget.amount || "",
+        category_id: budget.category_id || "",
+        amount: budget.amount || "",
     });
 
     const { patch, processing, errors } = useForm(values);
@@ -39,22 +39,23 @@ const EditBudget = () => {
                             <TextField
                                 fullWidth
                                 select
-                                label="category"
+                                label="Category"
                                 name="category_id"
+                                value={values.category_id}
                                 onChange={handleChange}
                                 margin="normal"
                                 required
                                 error={errors.category_id ? true : false}
                                 helperText={errors.category_id}
                             >
-                                {categories.map((category) => {
+                                {categories.map((category) => (
                                     <MenuItem
                                         key={category.id}
                                         value={category.id}
                                     >
                                         {category.name}
-                                    </MenuItem>;
-                                })}
+                                    </MenuItem>
+                                ))}
                             </TextField>
                             <TextField
                                 fullWidth
@@ -75,7 +76,7 @@ const EditBudget = () => {
                                 style={{ marginTop: "20px" }}
                                 disabled={processing}
                             >
-                                update
+                                Update
                             </Button>
                         </form>
                     </Paper>
