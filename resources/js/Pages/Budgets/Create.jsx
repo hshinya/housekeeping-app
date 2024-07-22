@@ -23,6 +23,9 @@ const CreateBudget = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(e);
+        console.log(name);
+        console.log(value);
         setValues((values) => ({ ...values, [name]: value }));
     };
 
