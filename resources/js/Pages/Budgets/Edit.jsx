@@ -21,7 +21,6 @@ const EditBudget = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log(e);
         console.log(name);
         console.log(value);
         setValues((values) => ({ ...values, [name]: value }));
@@ -29,7 +28,6 @@ const EditBudget = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(e);
         console.log(budget.id);
         console.log(values);
         patch(route("budgets.update", budget.id), values);
