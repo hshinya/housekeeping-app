@@ -28,8 +28,8 @@ const EditBudget = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(budget.id);
-        console.log(values);
+        // console.log(budget.id);
+        // console.log(values);
         patch(route("budgets.update", budget.id), values);
     };
 
