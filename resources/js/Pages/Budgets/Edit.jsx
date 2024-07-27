@@ -15,14 +15,16 @@ const EditBudget = () => {
     const [values, setValues] = useState({
         category_id: budget.category_id || "",
         amount: budget.amount || "",
+        start_date: budget.start_date || "",
+        end_date: budget.end_date || "",
     });
 
     const { patch, processing, errors } = useForm(values);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log(name);
-        console.log(value);
+        // console.log(name);
+        // console.log(value);
         setValues((values) => ({ ...values, [name]: value }));
     };
 
@@ -72,6 +74,36 @@ const EditBudget = () => {
                                 required
                                 error={errors.amount ? true : false}
                                 helperText={errors.amount}
+                            />
+                            <TextField
+                                fullWidth
+                                label="Start Date"
+                                name="start_date"
+                                type="date"
+                                value={values.start_date}
+                                onChange={handleChange}
+                                margin="normal"
+                                required
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                error={errors.start_date ? true : false}
+                                helperText={errors.start_date}
+                            />
+                            <TextField
+                                fullWidth
+                                label="End Date"
+                                name="end_date"
+                                type="date"
+                                value={values.end_date}
+                                onChange={handleChange}
+                                margin="normal"
+                                required
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                error={errors.end_date ? true : false}
+                                helperText={errors.end_date}
                             />
                             <Button
                                 variant="contained"
