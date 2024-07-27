@@ -2,35 +2,25 @@ import React from "react";
 import { Link, usePage } from "@inertiajs/react";
 import {
     Button,
-    IconButton,
-    Paper,
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableHead,
     TableRow,
-    Typography,
+    Paper,
+    IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Layout from "../../Components/Layout";
-import { Inertia } from "@inertiajs/inertia";
 
-const BudgetIndex = () => {
+function Index() {
     const { budgets } = usePage().props;
+
     return (
         <Layout title="Budgets">
-            <Paper style={{ padding: "20px" }}>
-                <Typography variant="h6">Budgets</Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    component={Link}
-                    href={route("budgets.create")}
-                    style={{ marginBottom: "20px" }}
-                >
-                    Add Budget
-                </Button>
+            <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -74,9 +64,18 @@ const BudgetIndex = () => {
                         ))}
                     </TableBody>
                 </Table>
-            </Paper>
+            </TableContainer>
+            <Button
+                component={Link}
+                href={route("budgets.create")}
+                variant="contained"
+                color="primary"
+                style={{ marginTop: "20px" }}
+            >
+                Add Budget
+            </Button>
         </Layout>
     );
-};
+}
 
-export default BudgetIndex;
+export default Index;

@@ -5,53 +5,30 @@ namespace App\Http\Controllers;
 use App\Models\Budget;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class BudgetController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Inertia\Response
-     */
     public function index()
     {
         $budgets = Budget::with('category')->get();
         return Inertia::render('Budgets/Index', ['budgets' => $budgets]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Inertia\Response
-     */
     public function create()
     {
         $categories = Category::all();
         return Inertia::render('Budgets/Create', ['categories' => $categories]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
     public function store(Request $request)
     {
-        Log::error("1");
-        Log::error($request);
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'amount' => 'required|numeric',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-
-        Log::error("2");
-        Log::error($request);
-        // Budget::create($request->all());
 
         Budget::create([
             'category_id' => $request->input('category_id'),
@@ -63,39 +40,16 @@ class BudgetController extends Controller
         return redirect()->route('budgets.index')->with('success', 'Budget created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Budget $budget
-     * @return \Inertia\Response
-     */
     public function edit($id)
     {
         $budget = Budget::findOrFail($id);
         $categories = Category::all();
-        Log::error("budget");
-        Log::error($budget);
-        Log::error("categories");
-        Log::error($categories);
         return Inertia::render('Budgets/Edit', [
             'budget' => $budget,
             'categories' => $categories,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $requestc
-     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -104,9 +58,6 @@ class BudgetController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-        Log::error($request);
-
-        // $budget->update($request->all());
 
         $budget = Budget::findOrFail($id);
         $budget->update([
@@ -116,21 +67,14 @@ class BudgetController extends Controller
             'end_date' => $request->input('end_date'),
         ]);
 
-        return redirect()->route('budgets.index')->with('success', 'Budget updated successfully!');
+        return redirect()->route('budgets.index')->with('success', 'Budget updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\Budget $budget
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    // public function destroy(Budget $budget)
     public function destroy($id)
     {
         $budget = Budget::findOrFail($id);
         $budget->delete();
 
-        return redirect()->route('budgets.index')->with('success', 'Budget deleted successfully!');
+        return redirect()->route('budgets.index')->with('success', 'Budget deleted successfully.');
     }
 }
