@@ -18,6 +18,7 @@ import { Inertia } from "@inertiajs/inertia";
 
 const BudgetIndex = () => {
     const { budgets } = usePage().props;
+
     return (
         <Layout title="Budgets">
             <Paper style={{ padding: "20px" }}>
