@@ -40,8 +40,6 @@ class BudgetController extends Controller
      */
     public function store(Request $request)
     {
-        Log::error("1");
-        Log::error($request);
         $request->validate([
             'category_id' => 'required|exists:categories,id',
             'amount' => 'required|numeric',
@@ -49,8 +47,6 @@ class BudgetController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
-        Log::error("2");
-        Log::error($request);
         // Budget::create($request->all());
 
         Budget::create([
@@ -81,10 +77,6 @@ class BudgetController extends Controller
     {
         $budget = Budget::findOrFail($id);
         $categories = Category::all();
-        Log::error("budget");
-        Log::error($budget);
-        Log::error("categories");
-        Log::error($categories);
         return Inertia::render('Budgets/Edit', [
             'budget' => $budget,
             'categories' => $categories,
@@ -104,7 +96,6 @@ class BudgetController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
-        Log::error($request);
 
         // $budget->update($request->all());
 
