@@ -9,6 +9,7 @@ import {
     MenuItem,
 } from "@mui/material";
 import Layout from "../../Components/Layout";
+import { Inertia } from '@inertiajs/inertia';
 
 const EditBudget = () => {
     const { budget, categories } = usePage().props;
@@ -23,16 +24,13 @@ const EditBudget = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // console.log(name);
-        // console.log(value);
         setValues((values) => ({ ...values, [name]: value }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(budget.id);
-        console.log(values);
-        patch(route("budgets.update", budget.id), values);
+        // patch(route("budgets.update", budget.id), values);
+        Inertia.patch(route("budgets.update", budget.id), values);
     };
 
     return (
