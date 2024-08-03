@@ -7,6 +7,7 @@ use App\Http\Controllers\DashbordController;
 use App\Http\Controllers\DetailController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -73,5 +74,8 @@ Route::post('/reports/search', [ReportController::class, 'search'])->name('repor
 
 // 予算ページ
 Route::resource('budgets', BudgetController::class);
+
+// ユーザー設定ページ
+Route::resource('users', UserController::class);
 
 require __DIR__.'/auth.php';
