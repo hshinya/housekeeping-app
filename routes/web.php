@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/category', [CategoryController::class, 'index']);
 Route::get('/detail', [DetailController::class, 'index']);
 
-// カテゴリ
+// カテゴリ設定
 // Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
 // Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
 // Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
