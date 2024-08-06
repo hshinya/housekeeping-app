@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -22,6 +23,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        Log::error("create");
         return Inertia::render('Users/Create');
     }
 
@@ -30,6 +32,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        Log::error($request);
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',

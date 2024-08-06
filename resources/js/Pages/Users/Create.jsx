@@ -1,6 +1,7 @@
-import { Grid, Paper, TextField, Typography } from "@mui/material";
+import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
 import Layout from "../../Components/Layout";
 import React, { useState } from "react";
+import { Inertia } from '@inertiajs/inertia';
 
 const Create = () => {
     const [values, setValues] = useState({
