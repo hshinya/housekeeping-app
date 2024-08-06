@@ -3,6 +3,7 @@ import Layout from "../../Components/Layout";
 import { Link, usePage } from "@inertiajs/react";
 import {
     Button,
+    Table,
     TableBody,
     TableCell,
     TableHead,
