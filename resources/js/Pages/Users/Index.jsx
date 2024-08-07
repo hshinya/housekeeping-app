@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 
 const Index = () => {
+
     const { users } = usePage().props;
 
     return (
