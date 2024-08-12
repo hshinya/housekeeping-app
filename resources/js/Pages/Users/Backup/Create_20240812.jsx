@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Button, Grid, Paper, TextField, Typography } from "@mui/material";
-import Layout from "../../Components/Layout";
-import { Inertia } from "@inertiajs/inertia";
 import { useForm } from "@inertiajs/react";
+import { TextField, Button, Grid, Paper, Typography } from "@mui/material";
+import Layout from "../../Components/Layout";
 
-const Create = () => {
+function Create() {
     const [values, setValues] = useState({
         name: "",
         email: "",
@@ -16,24 +15,20 @@ const Create = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setValues((values) => ({
-            ...values,
-            [name]: value,
-        }));
+        setValues((values) => ({ ...values, [name]: value }));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         post(route("users.store"));
-        // Inertia.post(route("users.store"), values);
     };
 
     return (
-        <Layout title="Add User">
+        <Layout title="Create User">
             <Grid container justifyContent="center">
                 <Grid item xs={12} md={6}>
                     <Paper style={{ padding: "20px" }}>
-                        <Typography variant="h6">Add User</Typography>
+                        <Typography variant="h6">Create User</Typography>
                         <form onSubmit={handleSubmit}>
                             <TextField
                                 fullWidth
@@ -91,7 +86,7 @@ const Create = () => {
                                 style={{ marginTop: "20px" }}
                                 disabled={processing}
                             >
-                                Add User
+                                Create
                             </Button>
                         </form>
                     </Paper>
@@ -99,6 +94,6 @@ const Create = () => {
             </Grid>
         </Layout>
     );
-};
+}
 
 export default Create;
