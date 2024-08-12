@@ -44,12 +44,6 @@ class UserController extends Controller
             'password' => Hash::make($request->input('password')),
         ]);
 
-        // User::create([
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'password' => bcrypt($request->password),
-        // ]);
-
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -91,12 +85,6 @@ class UserController extends Controller
         }
 
         $user->save();
-
-        // $user->update([
-        //     'name' => $request->name,
-        //     'email' => $request->email,
-        //     'password' => $request->password ? bcrypt($request->password) : $user->password,
-        // ]);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
