@@ -83,7 +83,6 @@ class UserController extends Controller
         }
 
         $user->save();
-
         // $user->update([
         //     'name' => $request->name,
         //     'email' => $request->email,
