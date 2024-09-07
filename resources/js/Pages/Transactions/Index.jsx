@@ -17,6 +17,7 @@ import Layout from "../../Components/Layout";
 
 function Index() {
     const { transactions } = usePage().props;
+    transactions.sort((a,b) => b.id - a.id);
 
     const handleDelete = (id) => {
         if (confirm("削除してもよろしいでしょうか?")) {
