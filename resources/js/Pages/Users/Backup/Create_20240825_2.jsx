@@ -24,7 +24,6 @@ const Create = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         // Inertia.post(route("users.store"), values);
         post(route("users.store"));
     };
