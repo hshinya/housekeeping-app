@@ -69,20 +69,36 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $request->validate([
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
         ]);
 
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->input('password'));
+        if ($validatedData['password']) {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+        } else {
+            unset($validatedData['password']);
         }
 
-        $user->save();
+        $user->update($validatedData);
+
+        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+
+        // $request->validate([
+        //     'name' => 'required|string|max:255',
+        //     'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+        //     'password' => 'nullable|string|min:8|confirmed',
+        // ]);
+
+        // $user->name = $request->input('name');
+        // $user->email = $request->input('email');
+
+        // if ($request->filled('password')) {
+        //     $user->password = Hash::make($request->input('password'));
+        // }
+
+        // $user->save();
 
         // $user->update([
         //     'name' => $request->name,
@@ -90,7 +106,7 @@ class UserController extends Controller
         //     'password' => $request->password ? bcrypt($request->password) : $user->password,
         // ]);
 
-        return redirect()->route('users.index')->with('success', 'User updated successfully.');
+        // return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
     /**
